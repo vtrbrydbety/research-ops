@@ -1,0 +1,36 @@
+# Codex 和检查过程临时目录
+.codex-tmp/
+.codex-work/
+.codex_tmp/
+.codex_tmp_*/
+.codex_xlsx/
+.qa/
+
+# 系统和编辑器文件
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.tmp
+~$*
+
+# 密钥与环境配置
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python / Node 缓存
+__pycache__/
+.pytest_cache/
+node_modules/
+
+# 正式问卷链接和收集证据
+#02_Questionnaire/20260804_Formal_Collection/03_Collection_Evidence/*Formal_Link*.png
+
+# 如 outputs 仅为可重新生成的临时结果，可启用
+outputs/

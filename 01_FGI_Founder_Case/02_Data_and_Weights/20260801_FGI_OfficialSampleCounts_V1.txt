@@ -1,0 +1,4 @@
+]633;E;for f in train_real_list.txt train_fake_list.txt test_real_list.txt test_fake_list.txt;9d98ae23-876e-4b4b-85b9-245e0d0305b7]633;Ctrain_real_list.txt       7650
+train_fake_list.txt       7650
+test_real_list.txt        407
+test_fake_list.txt        2293
