@@ -34,3 +34,6 @@ node_modules/
 
 # 如 outputs 仅为可重新生成的临时结果，可启用
 outputs/
+
+# Excel 自动检查产生的中间文件
+*.xlsx.inspect.ndjson
