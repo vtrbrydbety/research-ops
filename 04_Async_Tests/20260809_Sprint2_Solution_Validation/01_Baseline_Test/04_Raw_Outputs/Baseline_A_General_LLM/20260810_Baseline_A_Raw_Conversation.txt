@@ -1,0 +1,416 @@
+你现在需要完成一个科研论文复现前准备判断任务。
+
+【论文】
+Detecting Audio-Visual Deepfakes with Fine-Grained Inconsistencies
+BMVC 2024 official published version
+
+【代码仓库】
+Repository: aseuteurideu/FGI
+Branch: master
+Frozen Commit:
+8c9ea77117878924c29dd87bc5e08a239842ed0f
+
+请以该论文正式版本和上述固定 Commit 对应仓库内容作为主要判断对象。
+你可以按照当前产品正常提供的联网、搜索和网页/仓库读取能力获取必要补充信息。
+
+【用户当前条件】
+
+GPU Model:
+NVIDIA GeForce RTX 2080 Ti
+
+GPU VRAM:
+11 GB per GPU
+
+GPU Count:
+3
+
+System RAM:
+125 GB
+
+Available Disk Space:
+367 GB
+
+Storage Writable:
+Yes
+
+Operating System:
+Ubuntu 18.04.6 LTS
+
+CUDA:
+Unknown
+
+Python:
+Unknown
+
+Deep Learning Framework:
+Unknown
+
+Internet Access:
+Yes
+
+Large-file Download:
+Allowed
+
+Dataset Access / Permission:
+Unknown
+
+Available Time Budget:
+3 days
+
+【Reproduction Goal】
+
+判断当前条件是否值得开始 FGI 复现，并尽快形成一个可用于后续基线实验的可执行复现路径。
+
+【任务】
+
+请基于提供的 FGI 论文、仓库材料以及用户硬件 / 时间约束，判断当前是否适合开始复现。
+
+请输出以下内容：
+
+1. 总体决策：继续 / 有条件继续 / 暂停；
+2. 关键缺失项：当前影响复现准备判断的重要缺失信息；
+3. 主要风险：当前开始复现可能面临的主要风险；
+4. 证据出处：为每个关键结论指出其依据的材料或来源；
+5. 未知项：当前材料无法确认的信息；
+6. 前三步行动：当前最优先执行的三项下一步行动。
+
+若现有信息不足以支持某项判断，必须明确标记为“未知”，不得自行猜测或补造事实。
+
+
+
+
+
+
+## 1. 总体决策：**有条件继续**
+
+**建议现在开始 FGI 复现准备，但不要立即投入全量 100 epoch 训练。** 更合理的目标是：先在数小时内验证“固定 Commit → 环境 → 少量 DFDC 数据预处理 → 官方权重推理 → AUC 流程”是否真正跑通，再决定是否值得进行全量训练。
+
+原因是两方面同时存在：
+
+- **积极条件**：固定 Commit `8c9ea771...` 确实存在；仓库提供了依赖列表、作者使用的 DFDC 划分文件、预处理代码、训练代码、测试代码以及最终模型权重链接，因此不是只有论文、没有执行材料的项目。([GitHub](https://github.com/aseuteurideu/FGI/tree/8c9ea77117878924c29dd87bc5e08a239842ed0f "GitHub - aseuteurideu/FGI at 8c9ea77117878924c29dd87bc5e08a239842ed0f · GitHub"))
+- **阻塞条件尚未解除**：你的 CUDA/Python/PyTorch、NVIDIA driver、DFDC 权限均未知；367 GB 磁盘是否能容纳原视频+预处理峰值数据未知；而且论文和固定 Commit 在关键训练超参数上存在不一致。
+
+所以这里的“有条件继续”准确含义是：
+
+> **值得马上做可执行性验证；暂时不值得直接启动完整论文训练。**
+
+---
+
+## 2. 关键缺失项
+
+| 优先级缺失信息为什么重要 |                                |                                                                                                                                              |
+| ------------ | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **P0**       | NVIDIA Driver 版本               | 仓库环境固定到 CUDA 11.6 / PyTorch 1.12.1+cu116。NVIDIA 对 CUDA 11.6 Linux x86\_64 的 minor-version compatibility 要求 driver ≥ 450.80.02；当前 driver 未提供。 |
+| **P0**       | DFDC Kaggle 数据访问权限             | README 明确要求从 Kaggle DFDC 下载数据；你的权限目前是 Unknown。没有数据就无法完成作者划分的正式复现。                                                                            |
+| **P0**       | 当前 Python / Conda / PyTorch 状态 | 固定 Commit 的环境实际上是 **Python 3.7.16 + PyTorch 1.12.1 + torchvision 0.13.1 + torchaudio 0.12.1 + CUDA 11.6**。                                   |
+| **P0**       | 11 GB/GPU 的真实峰值显存              | 代码默认 batch size=8，并使用 `nn.DataParallel`；仓库和论文没有给出最低 VRAM，因此不能仅凭“2080 Ti 11GB”断定一定不会 OOM。                                                     |
+| **P0**       | 数据预处理后的实际磁盘占用                  | 预处理不仅保存原视频，还会产生 AVI、逐帧 JPG、裁剪视频、WAV 和最终 `pytmp` 数据。README 甚至明确要求处理完成后再删除部分中间目录，所以**峰值占用明显高于最终数据目录**，但作者没有给出 GB 数。                            |
+| **P1**       | 单个视频预处理速度、1 epoch 时间           | 论文规定完整训练 100 epoch，但没有报告你这类硬件上的训练时长；三天是否能完成完整复现目前无法确认。                                                                                       |
+
+作者固定划分本身是明确的：训练集列表是 **7650 real + 7650 fake = 15,300**，测试集是 **407 real + 2293 fake = 2,700**，与正式论文描述一致。
+
+---
+
+## 3. 主要风险
+
+### 风险 A｜数据与磁盘是目前最大的现实风险
+
+你的剩余可写空间是 **367 GB**，但当前无法确认是否足够。
+
+FGI 预处理会先把视频转换成 AVI、提帧、运行 S3FD 人脸检测与裁剪，再把每 30 帧组成一个训练片段，同时生成 48 kHz WAV。代码会产生 `pyavi / pyframes / pywork / pycrop / pytmp` 多套中间数据；README 明确表示只有预处理完成后才可以删除其中四类，并且 `pytmp` 必须保留。
+
+因此：
+
+**367 GB 是否足够：未知。**
+
+不能在未测量单批数据膨胀比例前假设足够。
+
+---
+
+### 风险 B｜论文与固定 Commit 存在一个非常重要的学习率不一致
+
+正式 BMVC 论文写的是：
+
+- Adam
+- 100 epochs
+- **learning rate = 1e-3**
+- weight decay = 1e-5
+- batch size = 8。
+
+但固定 Commit 的 `my_train.py` 是：
+
+- batch size = 8
+- 100 epochs
+- **默认 learning rate = 1e-4**
+- weight decay = 1e-5。
+
+而 README 的正式训练命令：
+
+```
+python my_train.py --out_dir . --epochs 100 --num_workers 7 --with_att --using_pseudo_fake
+
+```
+
+**没有传** **`--lr`**，所以实际会使用代码默认值 **1e-4**。官方提供的模型路径名称同样包含 `lr0.0001`。
+
+因此：
+
+> **“论文正式实验究竟应以 1e-3 还是公开代码/权重的 1e-4 为准”目前无法从公开材料唯一确定。**
+
+这是后续正式 baseline 必须记录的复现偏差，不能偷偷选一个。
+
+---
+
+### 风险 C｜仓库的数据 CSV 流程存在代码级不一致
+
+README 要求执行：
+
+```
+python write_csv.py --out_dir .
+
+```
+
+但固定 Commit 中 `write_csv.py` 对普通测试集生成的是：
+
+```
+test_split.csv
+
+```
+
+
+
+而 `dataset_3d.py` 在 DFDC test 模式实际读取：
+
+```
+test_imbalance_split.csv
+
+```
+
+
+
+也就是说，**严格按 README 从头执行，很可能在测试阶段因为 CSV 文件名不一致而需要人工修正/复制/重命名。**
+
+这不是你的环境问题，而是固定 Commit 本身的执行路径不完全闭合。
+
+---
+
+### 风险 D｜三张 GPU 能用于训练，但不会自动解决预处理瓶颈
+
+训练代码把模型包装为：
+
+```
+model = nn.DataParallel(model)
+
+```
+
+固定 Commit 没有指定 `device_ids`，而 PyTorch 的 `DataParallel` 默认使用所有可见 CUDA devices，因此你的 3×2080 Ti 理论上可以参与训练。
+
+但是预处理脚本是逐个遍历视频，并在 S3FD 中直接创建：
+
+```
+S3FD(device='cuda')
+
+```
+
+仓库本身没有实现三 GPU 数据分片式预处理。
+
+因此三块 GPU **有利于训练，但按原仓库运行不会自动把三块 GPU 都用于预处理**。
+
+---
+
+### 风险 E｜三天能否完整训练属于未知
+
+正式论文使用 15,300 个训练视频、100 epoch、batch size 8。
+
+仓库没有给出：
+
+- 训练使用什么 GPU；
+- 单 epoch 时间；
+- 总训练时间；
+- 峰值显存；
+- 完整预处理时间。
+
+因此：
+
+**3 天完成“下载 + 预处理 + 100 epoch 训练 + 测试”的概率目前无法可靠判断。**
+
+不能宣称三天够，也不能宣称一定不够。
+
+---
+
+## 4. 关键结论与证据出处
+
+| 关键结论判断主要证据                                    |                   |                                                                                                                                                                                                                      |
+| --------------------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 固定 Commit 可访问                                 | **已确认**           | GitHub 固定 Commit 页面明确显示 `8c9ea771...`。([GitHub](https://github.com/aseuteurideu/FGI/tree/8c9ea77117878924c29dd87bc5e08a239842ed0f "GitHub - aseuteurideu/FGI at 8c9ea77117878924c29dd87bc5e08a239842ed0f · GitHub")) |
+| 有官方完整代码路径                                     | **基本确认**          | README 包含依赖、DFDC preprocessing、training、testing、checkpoint。                                                                                                                                                          |
+| 作者训练集为 15,300                                 | **已确认**           | BMVC 正式论文 + 两个 7650 项作者列表。                                                                                                                                                                                           |
+| 作者测试集为 2,700                                  | **已确认**           | BMVC 正式论文 + 407 real / 2293 fake 作者列表。                                                                                                                                                                               |
+| 输入为 30×3×224×224 视频                           | **已确认**           | 正式论文及模型代码。                                                                                                                                                                                                           |
+| 音频为 48 kHz / 48,000 sample chunk              | **已确认**           | preprocess 和 dataset loader。                                                                                                                                                                                         |
+| 仓库目标环境是 Python 3.7 / Torch 1.12.1 / CUDA 11.6 | **已确认**           | `package-list.txt`。                                                                                                                                                                                                  |
+| 三块 GPU 可被训练代码利用                               | **代码支持**          | `nn.DataParallel` + PyTorch 官方行为。                                                                                                                                                                                    |
+| 11 GB VRAM 一定够                                | **未知**            | 作者未给出峰值显存。                                                                                                                                                                                                           |
+| 367 GB 磁盘一定够                                  | **未知**            | 作者未给出最终/峰值磁盘占用；预处理会产生多套中间数据。                                                                                                                                                                                         |
+| 三天一定能完成 100 epoch                             | **未知**            | 无公开训练时长数据。                                                                                                                                                                                                           |
+| 正确 LR 是 1e-3 还是 1e-4                          | **存在冲突 / 未知**     | 论文 1e-3；代码和公开权重路径 1e-4。                                                                                                                                                                                              |
+| README 数据→测试流程无需修改即可运行                        | **不能确认，且发现文件名冲突** | `write_csv.py` 输出 `test_split.csv`；loader 要求 `test_imbalance_split.csv`。                                                                                                                                             |
+
+---
+
+## 5. 当前仍必须标记为“未知”的项目
+
+**未知：**
+
+1. DFDC Kaggle 权限是否已经获得；
+2. NVIDIA driver 具体版本；
+3. 当前 CUDA toolkit / runtime 状态；
+4. 当前 Python、Conda、PyTorch 状态；
+5. `package-list.txt` 是否能在当前机器一次性成功重建；
+6. 11 GB/GPU 下 batch=8 的实际峰值显存；
+7. RTX 2080 Ti ×3 上的单 epoch 时间；
+8. 15,300+2,700 视频的实际原始数据体积；
+9. 完整预处理后的 `pytmp` 体积；
+10. 预处理期间的峰值磁盘占用；
+11. 全数据预处理所需时间；
+12. 3 天内能否完成完整 100 epoch；
+13. 正式论文最终训练究竟应把 LR=1e-3 还是公开代码/权重的 LR=1e-4 作为严格复现口径；
+14. Google Drive 权重文件的实际完整性、文件大小和校验值——README 链接存在且可访问到共享目录，但公开网页材料没有提供 checksum。
+
+---
+
+# 6. 前三步行动
+
+### 第一步：先做 **环境 Gate**，不要下载大数据
+
+立即在服务器执行：
+
+```
+nvidia-smi
+python --version
+python3 --version
+conda --version
+nvcc --version
+
+```
+
+然后确认三张 GPU 都正常可见，并重点记录 **Driver Version**。
+
+仓库期望环境是 Python 3.7.16、CUDA 11.6、Torch 1.12.1+cu116。PyTorch 官方仍提供 1.12.1 + CUDA 11.6 的历史安装配置。
+
+**这一步不通过，不进入大规模数据下载。**
+
+---
+
+### 第二步：做 **数据与磁盘 Gate**
+
+先做三件事，而不是直接下载整个 DFDC：
+
+1. 确认 Kaggle DFDC 是否能实际下载；
+2. 确认官方 Google Drive checkpoint 能实际取得；
+3. 只取极少数作者列表中的 real/fake 视频，跑完整 `pre-process.py`。
+
+然后实际测：
+
+```
+du -sh train
+df -h
+
+```
+
+记录：
+
+- 原始视频大小；
+- preprocessing 时间；
+- `pyavi`；
+- `pyframes`；
+- `pycrop`；
+- `pytmp`；
+- 峰值磁盘占用。
+
+这样才能用真实数据估算 **367 GB 是否足够**，而不是猜。
+
+---
+
+### 第三步：先打通 **最小 baseline 闭环**
+
+目标不是先训练 100 epoch，而是先完成：
+
+```
+固定 Commit
+    ↓
+正确环境
+    ↓
+少量 DFDC 视频
+    ↓
+pre-process.py
+    ↓
+CSV
+    ↓
+官方 checkpoint
+    ↓
+my_train.py --test
+    ↓
+my_test.py
+    ↓
+AUC/output.txt
+
+```
+
+这里需要特别处理已经确认的固定 Commit 问题：
+
+```
+write_csv.py → test_split.csv
+dataset_3d.py → test_imbalance_split.csv
+
+```
+
+在不修改数据内容的前提下，应明确记录这个兼容修正，例如复制：
+
+```
+cp test_split.csv test_imbalance_split.csv
+
+```
+
+然后跑官方权重推理。
+
+**只有这个闭环跑通，并拿到实际显存、预处理速度、磁盘占用和推理结果之后，才进入 15,300 样本 × 100 epoch 的正式训练。**
+
+---
+
+### 当前最终判断
+
+**FGI 值得开始复现，结论为「有条件继续」。**
+
+你现在的 **3×RTX 2080 Ti + 125 GB RAM** 并没有出现可以直接判定“不值得做”的硬件障碍；固定 Commit 也具备较完整的代码、划分和 checkpoint 材料。真正决定是否进入完整训练的，是接下来很快就能验证的四个 Gate：
+
+**Driver/环境 → DFDC 权限 → 磁盘峰值 → 最小 checkpoint 推理闭环。**
+
+其中目前最值得警惕的不是 GPU 型号，而是 **367 GB 磁盘、数据预处理耗时，以及论文** **`1e-3`** **与代码** **`1e-4`** **的复现口径冲突**。
+
+
+
+
+
+实际使用的外部工具是 **`web.run`**，主要做了两类操作：
+
+- **网页搜索** **`system1_search_query`**：搜索 BMVC 2024 正式论文、FGI GitHub 仓库及相关环境/仓库信息。 
+- **网页/源码读取** **`open`**：直接读取固定 Commit `8c9ea77117878924c29dd87bc5e08a239842ed0f` 下的仓库文件，例如： 
+  - `README.md` 
+  - `package-list.txt` 
+  - `my_train.py` 
+  - `dataset_3d.py` 
+  - `write_csv.py` 
+  - `pre-process.py` 
+  - `run_pipeline.py` 
+  - `train_real_list.txt` 
+  - `train_fake_list.txt` 
+  - `test_real_list.txt` 
+  - `test_fake_list.txt` 
+  -  以及 BMVC 2024 论文正式页面/PDF相关材料。 
+
+系统记录显示那一轮共进行了大约 **20 个网页/源码来源的检索与核对**。
+
+核心依据来自 **公开 Web 搜索 + 固定 Commit 源码直接读取**。
+
+

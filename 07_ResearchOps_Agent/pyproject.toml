@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "researchops-agent"
+version = "0.1.0"
+description = "An engineering agent for AI paper reproduction planning and execution."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "streamlit",
+    "langgraph",
+    "pydantic>=2",
+    "pydantic-settings",
+    "httpx>=0.28.1,<0.29",
+    "httpcore==1.0.9"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "httpx2>=2.7,<3",
+    "ruff",
+    "playwright>=1.50,<2",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["researchops*"]
+exclude = ["tests*", "apps*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+# 项目声明支持 Python 3.11 及以上，因此静态检查以 3.11 为最低语法基线。
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+# E4/E7/E9：基础语法与代码风格错误
+# F：未使用变量、未定义名称等 Pyflakes 问题
+# I：import 排序
+# B：常见潜在缺陷检查
+select = ["E4", "E7", "E9", "F", "I", "B"]

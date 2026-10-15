@@ -1,0 +1,8 @@
+tunnel: 1be9a224-0f36-4d38-87a9-890024dd4e3e
+credentials-file: /etc/cloudflared/1be9a224-0f36-4d38-87a9-890024dd4e3e.json
+metrics: 127.0.0.1:20241
+loglevel: info
+ingress:
+  - hostname: researchops-agent.com
+    service: http://127.0.0.1:8000
+  - service: http_status:404

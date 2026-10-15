@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ResearchOps — AI-native Layout + Neutral Palette V3.6</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="access.css">
+</head>
+<body data-access="pending">
+<section id="access-gate" aria-labelledby="access-title">
+  <form id="access-form">
+    <div class="access-brand">ResearchOps</div>
+    <h1 id="access-title">邀请码进入</h1>
+    <p>仅供受邀人员使用，无需注册。</p>
+    <label for="invitation-code">邀请码</label>
+    <input id="invitation-code" type="password" autocomplete="off" spellcheck="false" required maxlength="200">
+    <button id="access-submit" type="submit">进入</button>
+    <p id="access-message" role="status" aria-live="polite">正在检查会话…</p>
+    <p class="access-note">请保管好邀请码。同一个邀请码共享评估记录和使用额度。评估材料会按需发送至模型服务，结果默认保留最多 24 小时。</p>
+  </form>
+</section>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-orb">RO</div>
+      <div>ResearchOps</div><button id="access-logout" type="button">退出</button>
+    </div>
+    </header>
+
+  <main class="workspace">
+    <!-- SCREEN 01A -->
+    <section id="screen-setup" class="screen active">
+      <div class="hero simple-hero">
+        <div class="hero-copy">
+          <h1>What are you trying to reproduce?</h1>
+          <p class="lead">Provide your goal, one reliable target entry, and how you want to supply the environment information needed for this assessment.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="glass main-card">
+          <div class="main-inner">
+
+            <div class="section">
+              <div class="section-head">
+                <div class="step-icon">01</div>
+                <div>
+                  <div class="section-title">Reproduction goal</div>
+                  <div class="section-desc">What decision should this assessment help you make?</div>
+                </div>
+              </div>
+
+              <div class="input-shell field-focus">
+                <textarea
+                  aria-label="Reproduction goal"
+                  placeholder="For example: decide whether this project is ready for a bounded inference reproduction."
+                ></textarea>
+              </div>
+
+              <button id="context-toggle" class="context-toggle" type="button" aria-expanded="false">
+                <span id="context-toggle-icon">＋</span>
+                <span>Add context or constraints</span>
+                <span class="context-optional">Optional</span>
+              </button>
+
+              <div id="context-panel" class="context-panel">
+                <textarea
+                  class="context-textarea"
+                  aria-label="Additional context or constraints"
+                  placeholder="Anything else ResearchOps should consider?
+
+For example:
+- I only have 3 days.
+- Dataset access is not confirmed.
+- I already have the official checkpoint.
+- I only want to validate inference first."
+                ></textarea>
+                <div class="context-note">
+                  Environment facts such as GPU, CUDA, OS, and disk should still be provided through the environment section below.
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-head">
+                <div class="step-icon">02</div>
+                <div>
+                  <div class="section-title">Target</div>
+                  <div class="section-desc">Provide one reliable entry. ResearchOps can resolve related materials after you continue.</div>
+                </div>
+              </div>
+
+              <div class="input-shell target-row">
+                <select id="target-type" aria-label="Entry type">
+                  <option value="repository">Repository</option>
+                  <option value="paper">Paper title</option>
+                  <option value="doi">DOI</option>
+                  <option value="arxiv">arXiv</option>
+                  <option value="project">Project page</option>
+                </select>
+                <input
+                  id="target-entry"
+                  aria-label="Target entry"
+                  placeholder="Repository URL, paper title, DOI, arXiv ID, or project page"
+                />
+              </div>
+
+            </div>
+
+            <div class="section">
+              <div class="section-head">
+                <div class="step-icon">03</div>
+                <div>
+                  <div class="section-title">Reproduction environment</div>
+                  <div class="section-desc">Choose how ResearchOps should understand the environment you actually plan to use.</div>
+                </div>
+              </div>
+
+              <div class="mode-grid" id="mode-grid">
+                <button class="mode active" data-mode="readonly">
+                  <div class="mode-title">Read-only detection</div>
+                  <div class="mode-desc">Inspect agreed environment facts after read-only authorization.</div>
+                </button>
+
+                <button class="mode" data-mode="snapshot">
+                  <div class="mode-title">Snapshot</div>
+                  <div class="mode-desc">Upload an existing diagnostic or environment snapshot.</div>
+                </button>
+
+                <button class="mode" data-mode="manual">
+                  <div class="mode-title">Manual input</div>
+                  <div class="mode-desc">Paste or describe the environment facts you already know.</div>
+                </button>
+
+                <button class="mode" data-mode="later">
+                  <div class="mode-title">Not now</div>
+                  <div class="mode-desc">Continue without environment details.</div>
+                </button>
+              </div>
+
+              <div id="detail-readonly" class="readonly-info active">
+                <div class="readonly-info-icon">i</div>
+                <div>
+                  <div class="readonly-info-title">Authorization required</div>
+                  <div class="readonly-info-copy">No environment data is read until you approve read-only access.</div>
+                </div>
+              </div>
+
+              <div id="detail-snapshot" class="snapshot-panel">
+                <div class="snapshot-head">
+                  <div class="snapshot-icon">⇧</div>
+                  <div>
+                    <div class="snapshot-title">Environment snapshot</div>
+                  </div>
+                </div>
+
+                <label class="snapshot-drop" for="snapshot-file">
+                  <div>
+                    <div class="snapshot-drop-title">Choose snapshot file</div>
+                    <div class="snapshot-drop-copy">Supported formats are still being validated in this prototype.</div>
+                  </div>
+                  <div class="snapshot-choose">Choose file</div>
+                </label>
+
+                <input id="snapshot-file" class="file-input" type="file" />
+
+                <div id="snapshot-state" class="snapshot-file-state">
+                  <div class="snapshot-file-main">
+                    <div class="snapshot-file-icon">DOC</div>
+                    <div>
+                      <div id="snapshot-name" class="snapshot-file-name">environment_snapshot.txt</div>
+                      <div class="snapshot-file-meta">Selected for this assessment</div>
+                    </div>
+                  </div>
+                  <button id="remove-snapshot" class="snapshot-remove" type="button">Remove</button>
+                </div>
+              </div>
+
+              <div id="detail-manual" class="manual-ai-box">
+                <div class="manual-ai-head">
+                  <div>
+                    <div class="manual-ai-title">Describe your environment</div>
+                    <div class="manual-ai-desc">Paste or enter the environment facts you already know.</div>
+                  </div>
+                </div>
+
+                <textarea class="manual-textarea" placeholder="Example:
+GPU: RTX 2080 Ti ×3, 11 GB VRAM each
+OS: Ubuntu 18.04.6 LTS
+Python / Framework: unknown
+CUDA / Driver: unknown
+Available disk: 367 GB"></textarea>
+
+
+                <div class="manual-note">
+                  <span>✦</span>
+                  <span>Unknown values are allowed.</span>
+                </div>
+              </div>
+
+              <div id="setup-error" class="inline-error"></div>
+              <div class="actions actions-right">
+                <button id="continue-btn" class="btn primary">Continue to authorization <span>→</span></button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <aside class="side-stack">
+          <div class="glass side-card">
+            <div class="side-title">What you’ll get</div>
+            <div class="capability-list compact-list">
+              <div class="cap"><div class="cap-icon good">✓</div><div>Structured readiness status</div></div>
+              <div class="cap"><div class="cap-icon good">✓</div><div>Findings linked to inspectable evidence</div></div>
+              <div class="cap"><div class="cap-icon good">✓</div><div>An Overall Gate and first Next Action</div></div>
+            </div>
+          </div>
+
+          <div class="safety-compact">
+            <div class="safety-lock">🔒</div>
+            <div>
+              <div class="safety-title">Read-only decision support</div>
+              <div class="safety-copy">No installs, environment changes, file writes, or training execution.</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+
+
+    <div id="skip-confirm-backdrop" class="skip-confirm-backdrop" aria-hidden="true">
+      <div class="skip-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="skip-confirm-title">
+        <div class="skip-confirm-kicker">Target confirmation</div>
+        <div id="skip-confirm-title" class="skip-confirm-title">Continue without confirming?</div>
+        <div class="skip-confirm-copy">
+          ResearchOps will continue using the currently available target mapping without confirming which candidate is the intended target.
+        </div>
+        <div class="skip-confirm-warning">
+          This may produce a partially constrained assessment because some findings or evidence could be associated with the wrong target material.
+        </div>
+        <div class="skip-confirm-actions">
+          <button id="skip-confirm-cancel" class="ghost" type="button">Go back</button>
+          <button id="skip-confirm-proceed" class="btn primary" type="button">Confirm and continue <span>→</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARGET CONFIRMATION — supporting view -->
+    <section id="screen-target-confirm" class="screen">
+      <div class="confirm-wrap">
+        <div class="confirm-head">
+          <h1 class="confirm-title">Confirm the target</h1>
+          <div class="confirm-sub">ResearchOps found more than one plausible match for the entry you provided.</div>
+        </div>
+
+        <div class="glass confirm-card">
+          <div class="uncertainty-box">
+            The title alone is not specific enough to identify one target with confidence. Choose the intended match, add a more specific entry, or defer confirmation.
+          </div>
+
+          <div class="candidate-list">
+            <button id="candidate-a" class="candidate active" type="button">
+              <div class="candidate-type">Candidate A · Paper</div>
+              <div id="candidate-a-name" class="candidate-name">Provided paper title</div>
+              <div class="candidate-source">Primary match from the submitted title.</div>
+            </button>
+
+            <button id="candidate-b" class="candidate" type="button">
+              <div class="candidate-type">Candidate B · Related project</div>
+              <div id="candidate-b-name" class="candidate-name">Related project / repository match</div>
+              <div class="candidate-source">A related material with a similar title or project identity.</div>
+            </button>
+          </div>
+
+          <div class="confirm-actions">
+            <div class="confirm-alt">
+              <button id="target-supplement" class="ghost" type="button">Supplement entry</button>
+              <button id="target-defer" class="ghost" type="button">Continue without confirming</button>
+            </div>
+            <button id="target-confirm-btn" class="btn primary" type="button">Confirm selected target <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TARGET IDENTIFIED — supporting state -->
+    <section id="screen-target-identified" class="screen">
+      <div class="identified-wrap">
+        <div class="identified-card">
+          <div class="identified-head">
+            <div>
+              <div class="identified-kicker">Target resolution</div>
+              <h1 class="identified-title">Target identified</h1>
+            </div>
+            <div class="identified-state">Identified</div>
+          </div>
+
+          <div class="identified-copy">
+            ResearchOps resolved the submitted entry into a target that can be used for the readiness assessment.
+          </div>
+
+          <div class="identified-meta">
+            <div class="identified-row">
+              <div class="identified-label">Target</div>
+              <div id="identified-target-name" class="identified-value"></div>
+            </div>
+            <div class="identified-row">
+              <div class="identified-label">Resolved as</div>
+              <div id="identified-target-type" class="identified-value"></div>
+            </div>
+            <div class="identified-row">
+              <div class="identified-label">Source entry</div>
+              <div id="identified-source-entry" class="identified-value"></div>
+            </div>
+            <div class="identified-row">
+              <div class="identified-label">Materials summary</div>
+              <div id="identified-materials-summary" class="identified-value"></div>
+            </div>
+          </div>
+
+          <div class="identified-actions">
+            <button id="identified-back" class="ghost" type="button">← Back to Task Setup</button>
+            <button id="identified-continue" class="btn primary" type="button">Continue <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 01B -->
+    <section id="screen-auth" class="screen">
+      <div class="auth-wrap">
+        <div class="auth-page-head">
+          <h1>Review read-only access</h1>
+          <p class="lead">Confirm what ResearchOps may inspect before it reads any environment information.</p>
+        </div>
+
+        <div class="glass auth-card">
+          <div class="auth-mode-row">
+            <div class="readonly-tag">Read-only detection</div>
+            <div class="auth-mode-copy">Environment acquisition mode</div>
+          </div>
+
+          <div class="auth-grid">
+            <div class="scope-card">
+              <h3>ResearchOps can inspect</h3>
+              <div class="scope-line"><div class="cap-icon good">✓</div><div>OS / Python / Framework</div></div>
+              <div class="scope-line"><div class="cap-icon good">✓</div><div>CUDA / Driver</div></div>
+              <div class="scope-line"><div class="cap-icon good">✓</div><div>GPU / VRAM</div></div>
+              <div class="scope-line"><div class="cap-icon good">✓</div><div>Available disk</div></div>
+            </div>
+
+            <div class="scope-card">
+              <h3>ResearchOps will not</h3>
+              <div class="scope-line"><div class="cap-icon no">×</div><div>Install packages</div></div>
+              <div class="scope-line"><div class="cap-icon no">×</div><div>Modify environment</div></div>
+              <div class="scope-line"><div class="cap-icon no">×</div><div>Write / delete / overwrite files</div></div>
+              <div class="scope-line"><div class="cap-icon no">×</div><div>Start training or reproduction</div></div>
+            </div>
+          </div>
+
+          <div class="auth-fallback-note">
+            Prefer not to authorize direct inspection? Use Snapshot or Manual Input instead.
+          </div>
+
+          <div class="auth-actions">
+            <div class="alt">
+              <button id="back-btn" class="ghost">← Back</button>
+              <button id="auth-use-snapshot" class="ghost" type="button">Use snapshot instead</button>
+              <button id="auth-use-manual" class="ghost" type="button">Manual input</button>
+              <button id="auth-no-environment" class="ghost" type="button">Continue without environment data</button>
+            </div>
+            <div class="auth-decision">
+              <button id="deny-authorize-btn" class="ghost" type="button">Don't authorize</button>
+              <button id="authorize-btn" class="btn primary">Authorize read-only access <span>→</span></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- AUTHORIZATION DENIED — supporting state -->
+    <section id="screen-auth-denied" class="screen">
+      <div class="auth-denied-wrap">
+        <div class="auth-denied-card">
+          <div class="auth-denied-head">
+            <div>
+              <div class="auth-denied-kicker">Environment access</div>
+              <h1 class="auth-denied-title">Read-only access not authorized</h1>
+            </div>
+            <div class="auth-denied-state">Authorization Denied</div>
+          </div>
+
+          <div class="auth-denied-copy">
+            ResearchOps did not read any environment information. You can provide the same context through another supported input path.
+          </div>
+
+          <div class="auth-denied-boundary">
+            Authorization Denied is not Environment Blocked and does not directly assign RD-02 a Blocked status.
+          </div>
+
+          <div class="auth-denied-actions">
+            <button id="auth-denied-review" class="ghost" type="button">← Review access again</button>
+            <div class="auth-denied-alt">
+              <button id="auth-denied-snapshot" class="ghost" type="button">Use snapshot instead</button>
+              <button id="auth-denied-manual" class="ghost" type="button">Manual input</button>
+              <button id="auth-denied-no-env" class="btn primary" type="button">Continue without environment data <span>→</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESSING -->
+    <section id="screen-processing" class="screen">
+      <div class="processing-wrap">
+        <div class="glass processing-card">
+          <div class="processing-icon">✦</div>
+          <div class="processing-title">Building your readiness assessment</div>
+          <div id="processing-copy" class="processing-copy">ResearchOps is combining the available environment context with the target materials needed for this assessment.</div>
+
+          <div class="processing-list">
+            <div class="processing-row">
+              <div class="processing-row-left"><div class="spinner"></div><div id="processing-env-label">Acquiring environment context</div></div>
+              <div id="processing-env-state" class="processing-state">Processing</div>
+            </div>
+            <div class="processing-row">
+              <div class="processing-row-left"><div class="spinner"></div><div>Reviewing linked target materials</div></div>
+              <div class="processing-state">Processing</div>
+            </div>
+            <div class="processing-row">
+              <div class="processing-row-left"><div class="spinner"></div><div>Building readiness findings and Gate</div></div>
+              <div class="processing-state">Processing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PARTIAL RESULT — state variant, not a new core page -->
+    <section id="screen-partial-result" class="screen">
+      <div class="partial-wrap">
+        <div class="partial-card">
+          <div class="partial-head">
+            <div>
+              <div class="partial-kicker">Acquisition state</div>
+              <h1 class="partial-title">Partial result available</h1>
+            </div>
+            <div class="partial-state">Partial Result</div>
+          </div>
+
+          <div class="partial-copy">
+            Some assessment inputs are available, while one acquisition step is still incomplete. ResearchOps has not converted the incomplete acquisition into a readiness Warning, Unknown, or Blocked status.
+          </div>
+
+          <div class="partial-note">
+            This is a processing / acquisition state, not a business readiness status.
+          </div>
+          <div id="partial-trace" class="partial-note" hidden></div>
+
+          <div class="partial-progress">
+            <div class="partial-row">
+              <div>
+                <div class="partial-row-title">Target materials</div>
+                <div class="partial-row-copy">Primary target and linked materials currently available to the assessment.</div>
+              </div>
+              <div class="partial-row-state available">Available</div>
+            </div>
+
+            <div class="partial-row">
+              <div>
+                <div class="partial-row-title">Environment context</div>
+                <div class="partial-row-copy">Environment facts currently available from the selected input path.</div>
+              </div>
+              <div class="partial-row-state available">Available</div>
+            </div>
+
+            <div class="partial-row">
+              <div>
+                <div class="partial-row-title">Additional material review</div>
+                <div class="partial-row-copy">One linked material review has not finished yet.</div>
+              </div>
+              <div class="partial-row-state processing">Still processing</div>
+            </div>
+          </div>
+
+          <div class="partial-actions">
+            <button id="partial-back-setup" class="ghost" type="button">← Back to Task Setup</button>
+            <button id="partial-continue" class="btn primary" type="button">Continue processing</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ACQUISITION FAILURE — state variant, not a new core page -->
+    <section id="screen-acquisition-failure" class="screen">
+      <div class="failure-wrap">
+        <div class="failure-card">
+          <div class="failure-head">
+            <div>
+              <div class="failure-kicker">Acquisition state</div>
+              <h1 class="failure-title">Environment acquisition failed</h1>
+            </div>
+            <div class="failure-state">Acquisition Failure</div>
+          </div>
+
+          <div class="failure-copy">
+            ResearchOps could not complete the selected environment acquisition step. No readiness status has been assigned from this technical failure.
+          </div>
+
+          <div class="failure-boundary">
+            Acquisition Failure is not Environment Blocked and does not by itself produce Warning, Blocked, or PAUSE.
+          </div>
+
+          <div class="failure-detail">
+            <div class="failure-detail-label">What failed</div>
+            <div class="failure-detail-title">Read-only environment acquisition</div>
+            <div class="failure-detail-copy">
+              The requested environment facts could not be retrieved. You can retry the same path or provide the environment through another supported input mode.
+            </div>
+            <div id="failure-trace" class="failure-detail-copy" hidden></div>
+          </div>
+
+          <div class="failure-actions">
+            <div class="failure-alt">
+              <button id="failure-snapshot" class="ghost" type="button">Use snapshot instead</button>
+              <button id="failure-manual" class="ghost" type="button">Manual input</button>
+            </div>
+            <button id="failure-retry" class="btn primary" type="button">Retry <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CONFLICT — state variant, not a new core page -->
+    <section id="screen-conflict" class="screen">
+      <div class="conflict-wrap">
+        <div class="conflict-card">
+          <div class="conflict-head">
+            <div>
+              <div class="conflict-kicker">Acquisition state</div>
+              <h1 class="conflict-title">Conflicting evidence found</h1>
+            </div>
+            <div class="conflict-state">Conflict</div>
+          </div>
+
+          <div class="conflict-copy">
+            ResearchOps found two available sources that support different interpretations of the same setup condition.
+          </div>
+
+          <div class="conflict-boundary">
+            Conflict is an acquisition / analysis state. It is not itself a Readiness Warning, Unknown, Blocked, or PAUSE decision.
+          </div>
+
+          <div class="conflict-sources">
+            <div class="conflict-source">
+              <div class="conflict-source-label">Source A</div>
+              <div class="conflict-source-title">Paper setup description</div>
+              <div class="conflict-source-value">
+                The published setup describes one environment or evaluation configuration.
+              </div>
+              <div class="conflict-source-meta">Material · Paper</div>
+            </div>
+
+            <div class="conflict-source">
+              <div class="conflict-source-label">Source B</div>
+              <div class="conflict-source-title">Repository setup description</div>
+              <div class="conflict-source-value">
+                The repository material indicates a different environment or evaluation configuration.
+              </div>
+              <div class="conflict-source-meta">Material · Repository</div>
+            </div>
+          </div>
+
+          <div class="conflict-rule">
+            Both sources remain visible. ResearchOps does not silently choose one source or collapse the disagreement into a single conclusion.
+          </div>
+
+          <div class="conflict-actions">
+            <div class="conflict-alt">
+              <button id="conflict-back-setup" class="ghost" type="button">← Back to Task Setup</button>
+            </div>
+            <button id="conflict-review" class="btn primary" type="button">Review available evidence <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- GATE NOT AVAILABLE YET — state variant, not a fourth Gate -->
+    <section id="screen-gate-not-available" class="screen">
+      <div class="gate-na-wrap">
+        <div class="gate-na-card">
+          <div class="gate-na-head">
+            <div>
+              <div class="gate-na-kicker">Overall Gate</div>
+              <h1 class="gate-na-title">Not Available Yet</h1>
+            </div>
+            <div class="gate-na-state">Gate unavailable</div>
+          </div>
+
+          <div class="gate-na-copy">
+            ResearchOps does not yet have enough completed readiness findings to reliably aggregate an Overall Gate.
+          </div>
+          <div id="gate-na-trace" class="gate-na-copy" hidden></div>
+
+          <div class="gate-na-boundary">
+            “Not Available Yet” is not a fourth Gate value and must not be interpreted as Gate = Unknown.
+          </div>
+
+          <div class="gate-na-list">
+            <div class="gate-na-row">
+              <div>
+                <div class="gate-na-row-title">RD-01 · Data & Access Readiness</div>
+                <div class="gate-na-row-copy">A usable dimension result is already available.</div>
+              </div>
+              <div class="gate-na-row-state available">Available</div>
+            </div>
+
+            <div class="gate-na-row">
+              <div>
+                <div class="gate-na-row-title">RD-02 · Environment & Dependency Readiness</div>
+                <div class="gate-na-row-copy">Required acquisition / analysis is not complete yet.</div>
+              </div>
+              <div class="gate-na-row-state">Still processing</div>
+            </div>
+
+            <div class="gate-na-row">
+              <div>
+                <div class="gate-na-row-title">RD-03 · Weights & Configuration Readiness</div>
+                <div class="gate-na-row-copy">A usable dimension result is already available.</div>
+              </div>
+              <div class="gate-na-row-state available">Available</div>
+            </div>
+          </div>
+
+          <div class="gate-na-actions">
+            <button id="gate-na-back-setup" class="ghost" type="button">← Back to Task Setup</button>
+            <button id="gate-na-continue" class="btn primary" type="button">Continue processing <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- BLOCKED / PAUSE — Gate result variant -->
+    <section id="screen-pause" class="screen">
+      <div class="pause-wrap">
+        <div class="pause-head">
+          <h1 class="pause-title">Readiness Overview</h1>
+          <button id="pause-back-setup" class="ghost pause-back" type="button">← Back to Task Setup</button>
+        </div>
+
+        <div class="pause-gate">
+          <div class="pause-gate-top">
+            <div>
+              <div class="pause-label">Overall Gate</div>
+              <div class="pause-value">PAUSE</div>
+            </div>
+            <div class="pause-chip">Blocking evidence found</div>
+          </div>
+
+          <div class="pause-reason">
+            <div class="pause-reason-label">Reason</div>
+            <div class="pause-reason-text">A required data-access condition is explicitly unavailable under the current reproduction path.</div>
+          </div>
+        </div>
+
+        <div class="dimension-grid">
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-01</div>
+                <div class="dimension-name">Data & Access Readiness</div>
+              </div>
+              <div class="status-chip status-blocked">Blocked</div>
+            </div>
+            <div class="dimension-copy">Explicit negative evidence shows the required dataset access is unavailable for the current reproduction path.</div>
+            <div class="dimension-impact">Gate impact · Triggers PAUSE</div>
+            <button id="pause-rd01-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-02</div>
+                <div class="dimension-name">Environment & Dependency Readiness</div>
+              </div>
+              <div class="status-chip status-warning">Warning</div>
+            </div>
+            <div class="dimension-copy">A compatibility risk is known, but current evidence does not establish a hard environment blocker.</div>
+            <div class="dimension-impact">Gate impact · Non-blocking risk</div>
+            <button id="pause-rd02-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-03</div>
+                <div class="dimension-name">Weights & Configuration Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">Required checkpoint and configuration relationships are sufficiently identified for the current assessment.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="pause-rd03-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+        </div>
+
+        <div class="pause-lower">
+          <div class="pause-blocker">
+            <div class="pause-section-label">Key Blocker</div>
+            <div class="pause-section-title">Required dataset access is not available</div>
+            <div class="pause-section-copy">This is a confirmed blocking condition, not a missing-information Unknown.</div>
+            <div class="pause-evidence">
+              Blocking evidence · The required access condition has an explicit negative result for the current reproduction path.
+            </div>
+          </div>
+
+          <div class="pause-action">
+            <div class="pause-section-label">First Next Action</div>
+            <div class="pause-section-title">Resolve or replace the blocked access path</div>
+            <div class="pause-section-copy">Confirm an alternative permitted data path or otherwise resolve the explicit access blocker before higher-cost reproduction work.</div>
+            <div class="pause-action-type">Action type · Resolve Blocker</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- READY / PROCEED — Gate result variant -->
+    <section id="screen-proceed" class="screen">
+      <div class="proceed-wrap">
+        <div class="proceed-head">
+          <h1 class="proceed-title">Readiness Overview</h1>
+          <button id="proceed-back-setup" class="ghost" type="button">← Back to Task Setup</button>
+        </div>
+
+        <div class="proceed-gate">
+          <div class="proceed-gate-top">
+            <div>
+              <div class="proceed-label">Overall Gate</div>
+              <div class="proceed-value">PROCEED</div>
+            </div>
+            <div class="proceed-chip">Ready to continue</div>
+          </div>
+
+          <div class="proceed-reason">
+            <div class="proceed-reason-label">Reason</div>
+            <div class="proceed-reason-text">All three core readiness dimensions are supported by sufficient positive evidence, with no material resource or priority evaluation conflict affecting the current path.</div>
+          </div>
+        </div>
+
+        <div class="dimension-grid">
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-01</div>
+                <div class="dimension-name">Data & Access Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">Required data and access conditions are sufficiently supported for the current validation path.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="proceed-rd01-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-02</div>
+                <div class="dimension-name">Environment & Dependency Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">The available environment facts are sufficiently aligned with the documented dependency requirements for the current validation path.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="proceed-rd02-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-03</div>
+                <div class="dimension-name">Weights & Configuration Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">Required checkpoint and configuration relationships are sufficiently identified for the intended validation path.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="proceed-rd03-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+        </div>
+
+        <div class="proceed-lower">
+          <div class="proceed-summary">
+            <div class="proceed-section-label">Readiness Summary</div>
+            <div class="proceed-section-title">No current gate-critical blocker or unresolved core readiness gap</div>
+            <div class="proceed-section-copy">Positive evidence remains inspectable even when the current status is Ready.</div>
+            <div class="proceed-signal">Additional Signals · No material resource constraint or priority evaluation conflict currently changes the Gate.</div>
+          </div>
+
+          <div class="proceed-action">
+            <div class="proceed-section-label">First Next Action</div>
+            <div class="proceed-section-title">Run the minimum validation before higher-cost reproduction work</div>
+            <div class="proceed-section-copy">Continue with the smallest reasonable validation step before committing to a more expensive reproduction path.</div>
+            <div class="proceed-action-type">Action type · Minimum Validation</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 02 -->
+    <section id="screen-overview" class="screen">
+      <div class="overview-wrap">
+        <div class="overview-head">
+          <div>
+            <h1 class="overview-title">Readiness Overview</h1>
+          </div>
+          <div class="overview-actions">
+            <button id="assessment-history-btn" class="ghost overview-back" type="button">Revision history</button>
+            <button id="overview-back-btn" class="ghost overview-back" type="button">← Back to Task Setup</button>
+          </div>
+        </div>
+
+        <div class="gate-card">
+          <div class="gate-top">
+            <div>
+              <div class="gate-label">Overall Gate</div>
+              <div class="gate-value">CONDITIONAL PROCEED</div>
+            </div>
+          </div>
+
+          <div class="gate-reason">
+            <div class="gate-reason-label">Reason</div>
+            <div class="gate-reason-text">Dataset access permission is not confirmed.</div>
+          </div>
+        </div>
+
+        <div class="dimension-grid">
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-01</div>
+                <div class="dimension-name">Data & Access Readiness</div>
+              </div>
+              <div class="status-chip status-unknown">Unknown</div>
+            </div>
+            <div class="dimension-copy">A gate-critical dataset access condition is still unresolved.</div>
+            <div class="dimension-impact">Gate impact · Prevents full PROCEED</div>
+            <button id="rd01-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-02</div>
+                <div class="dimension-name">Environment & Dependency Readiness</div>
+              </div>
+              <div id="rd02-status" class="status-chip status-warning">Warning</div>
+            </div>
+            <div id="rd02-copy" class="dimension-copy">The environment is usable for assessment, with a known compatibility risk that needs validation.</div>
+            <div id="rd02-impact" class="dimension-impact">Gate impact · Non-blocking risk</div>
+            <button id="rd02-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-03</div>
+                <div class="dimension-name">Weights & Configuration Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">Required checkpoint and configuration relationships are sufficiently identified for the current assessment.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="rd03-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+        </div>
+
+        <div class="overview-lower">
+          <div class="focus-card">
+            <div class="focus-kicker">Key issue</div>
+            <div class="focus-title">Dataset access permission is not confirmed</div>
+            <div class="focus-copy">This unresolved condition is currently preventing a full PROCEED decision.</div>
+            <div class="focus-meta">
+              <div class="meta-chip">Gate-critical Unknown</div>
+            </div>
+          </div>
+
+          <div class="next-action-card">
+            <div class="next-action-priority">First Next Action</div>
+            <div class="next-action-title">Confirm whether dataset access can be obtained</div>
+            <div class="next-action-copy">Verify access before moving to higher-cost reproduction work.</div>
+            <div class="next-action-type">Action type · Resolve Gate-critical Unknown</div>
+          </div>
+        </div>
+
+        <section id="revision-history" class="revision-history" hidden aria-live="polite">
+          <div class="revision-history-head">
+            <div>
+              <div class="revision-history-title">Assessment revision history</div>
+              <div class="revision-history-copy">Each entry is a retained AI → Rule result after Human feedback; it never exposes raw prompts or private source material.</div>
+            </div>
+            <button id="assessment-history-close-btn" class="ghost" type="button">Close</button>
+          </div>
+          <div id="revision-history-content"></div>
+        </section>
+
+        <div class="signals-section">
+          <div class="signals-section-head">
+            <div class="signals-title">Additional signals</div>
+            <div class="signals-note">Supporting context, not core Dimensions</div>
+          </div>
+
+          <div class="signal-grid">
+            <div class="signal-card">
+              <div class="signal-card-head">
+                <div class="signal-name">Resource Constraint</div>
+                <div class="signal-status unknown">Unknown</div>
+              </div>
+              <div class="signal-summary">Available resource facts are known, but the project’s explicit minimum requirements are not fully confirmed.</div>
+              <button id="resource-signal-btn" class="signal-detail-btn" type="button">View details →</button>
+            </div>
+
+            <div class="signal-card">
+              <div class="signal-card-head">
+                <div class="signal-name">Evaluation Conflict</div>
+                <div class="signal-status warning">Warning</div>
+              </div>
+              <div class="signal-summary">A paper-code evaluation setting difference may affect result comparability.</div>
+              <button id="evaluation-signal-btn" class="signal-detail-btn" type="button">View details →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+
+    <!-- SCREEN 03 — DIMENSION DETAIL -->
+    <section id="screen-dimension-detail" class="screen">
+      <div class="dimension-detail-wrap">
+        <div class="dimension-detail-head">
+          <div>
+            <div id="detail-dimension-id" class="dimension-detail-kicker">RD-01</div>
+            <h1 id="detail-dimension-name" class="dimension-detail-title">Data & Access Readiness</h1>
+          </div>
+          <button id="dimension-back-btn" class="ghost" type="button">← Back to Overview</button>
+        </div>
+
+        <div class="dimension-summary-card">
+          <div class="dimension-status-line">
+            <div id="detail-status" class="status-chip status-unknown">Unknown</div>
+            <div id="detail-status-copy" class="dimension-status-copy">Dataset access cannot be confirmed with the evidence currently available.</div>
+          </div>
+
+          <div class="dimension-gate-impact">
+            <div class="impact-title">Gate Impact</div>
+            <div id="detail-gate-impact" class="impact-copy">Prevents full PROCEED until the access condition is resolved.</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Key Finding</div>
+
+          <div class="finding-card">
+            <div class="finding-top">
+              <div>
+                <div id="detail-finding-condition" class="finding-condition">Condition · Dataset access</div>
+                <div id="detail-finding-title" class="finding-title">Dataset access permission is not confirmed</div>
+              </div>
+            </div>
+
+            <div id="detail-finding-summary" class="finding-summary">Available sources do not establish whether the required dataset can be accessed under the user’s actual reproduction conditions.</div>
+
+            <div class="finding-tags">
+              <div id="detail-finding-type" class="finding-tag">Finding type · Unknown</div>
+              <div id="detail-critical-tag" class="finding-tag critical">Gate-critical</div>
+              <div id="detail-evidence-tag" class="finding-tag">Evidence · Available</div>
+            </div>
+
+            <div class="finding-bottom">
+              <div id="detail-finding-impact" class="finding-impact">Gate impact · Prevents full PROCEED</div>
+              <div class="finding-actions">
+                <button id="dimension-feedback-btn" class="finding-action muted-action" type="button">Give feedback</button>
+                <button id="dimension-view-evidence" class="finding-action" type="button">View evidence →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Related Next Action</div>
+
+          <div class="related-action-card">
+            <div id="detail-next-action-title" class="related-action-title">Confirm whether dataset access can be obtained</div>
+            <div id="detail-next-action-type" class="related-action-type">Resolve Gate-critical Unknown</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <div id="evidence-backdrop" class="evidence-backdrop"></div>
+    <aside id="evidence-drawer" class="evidence-drawer" aria-hidden="true">
+      <div class="evidence-head">
+        <div>
+          <div class="evidence-kicker">Evidence Detail</div>
+          <div id="evidence-title" class="evidence-title">Supporting evidence</div>
+        </div>
+        <button id="evidence-close" class="evidence-close" type="button">Close</button>
+      </div>
+
+      <div class="verification-row">
+        <div class="verification-label">Verification status</div>
+        <div id="evidence-verification" class="verification-chip">Located Only</div>
+      </div>
+
+      <div class="evidence-section">
+        <div class="evidence-label">Evidence Summary</div>
+        <div id="evidence-summary" class="evidence-value"></div>
+      </div>
+
+      <div class="evidence-section">
+        <div class="evidence-label">Source</div>
+        <div id="evidence-source" class="evidence-value"></div>
+
+        <div class="source-meta">
+          <div class="source-meta-item">
+            <div class="source-meta-label">Location</div>
+            <div id="evidence-location" class="source-meta-value"></div>
+          </div>
+          <div class="source-meta-item">
+            <div class="source-meta-label">Material Type</div>
+            <div id="evidence-material-type" class="source-meta-value"></div>
+          </div>
+        </div>
+
+        <div id="evidence-conflict" class="conflict-box"></div>
+
+        <div id="evidence-conflict-compare" class="evidence-conflict-compare">
+          <div class="evidence-conflict-source">
+            <div class="evidence-conflict-source-label">Source A</div>
+            <div id="evidence-conflict-a-title" class="evidence-conflict-source-title"></div>
+            <div id="evidence-conflict-a-copy" class="evidence-conflict-source-copy"></div>
+          </div>
+          <div class="evidence-conflict-source">
+            <div class="evidence-conflict-source-label">Source B</div>
+            <div id="evidence-conflict-b-title" class="evidence-conflict-source-title"></div>
+            <div id="evidence-conflict-b-copy" class="evidence-conflict-source-copy"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="evidence-actions">
+        <button id="evidence-feedback-btn" class="evidence-feedback-btn" type="button">Feedback on evidence</button>
+        <button id="evidence-open-source" class="open-source-btn" type="button">Open source ↗</button>
+      </div>
+    </aside>
+
+    <div id="feedback-backdrop" class="feedback-backdrop"></div>
+    <aside id="feedback-panel" class="feedback-panel" aria-hidden="true">
+      <div class="feedback-head">
+        <div>
+          <div id="feedback-kicker" class="feedback-kicker">Finding feedback</div>
+          <div id="feedback-context-title" class="feedback-title">Give feedback</div>
+        </div>
+        <button id="feedback-close" class="feedback-close" type="button">Close</button>
+      </div>
+
+      <div id="feedback-copy" class="feedback-copy">Feedback applies to this Finding and its evidence. It does not directly edit the Dimension status or Overall Gate.</div>
+
+      <div class="feedback-options">
+        <button class="feedback-option" data-feedback="confirm" type="button">Confirm</button>
+        <button class="feedback-option" data-feedback="question" type="button">Question</button>
+        <button class="feedback-option" data-feedback="correct" type="button">Correct</button>
+        <button class="feedback-option" data-feedback="evidence" type="button">Add Evidence</button>
+      </div>
+
+      <div id="feedback-input-wrap" class="feedback-input-wrap">
+        <textarea id="feedback-textarea" class="feedback-textarea" placeholder="Describe what should be questioned, corrected, or added..."></textarea>
+      </div>
+
+      <div class="feedback-note">If this feedback changes the underlying Finding, ResearchOps may reassess the related Dimension and Gate.</div>
+
+      <div id="feedback-error" class="feedback-error"></div>
+      <button id="feedback-submit" class="btn primary feedback-submit" type="button">Submit feedback</button>
+      <div id="feedback-success" class="feedback-success">Feedback recorded for this Finding.</div>
+    </aside>
+
+    <div id="signal-backdrop" class="drawer-backdrop"></div>
+
+    <aside id="signal-drawer" class="signal-drawer" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <div id="drawer-kicker" class="drawer-kicker">Additional Signal</div>
+          <div id="drawer-title" class="drawer-title">Signal details</div>
+        </div>
+        <button id="signal-drawer-close" class="drawer-close" type="button">Close</button>
+      </div>
+
+      <div id="resource-drawer-content">
+        <div class="drawer-section">
+          <div class="drawer-label">Status</div>
+          <div class="drawer-value"></div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Summary</div>
+          <div class="drawer-value"></div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Resource items</div>
+          <div class="resource-table">
+            <div class="resource-row header"><div>Resource</div><div>Current</div><div>Required</div></div>
+            <div class="resource-row"><div class="resource-type"></div><div></div><div></div></div>
+            <div class="resource-row"><div class="resource-type"></div><div></div><div></div></div>
+            <div class="resource-row"><div class="resource-type"></div><div></div><div></div></div>
+          </div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Gate impact</div>
+          <div class="drawer-value"></div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Evidence</div>
+          <div class="drawer-value"></div>
+          <button id="resource-evidence-link" class="drawer-link" type="button">View related evidence →</button>
+        </div>
+      </div>
+
+      <div id="evaluation-drawer-content" style="display:none">
+        <div class="drawer-section">
+          <div class="drawer-label">Status</div>
+          <div class="drawer-value"></div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Conflict type</div>
+          <div class="drawer-value"></div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Summary</div>
+          <div class="drawer-value"></div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Gate impact</div>
+          <div class="drawer-value"></div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Evidence</div>
+          <div class="drawer-value"></div>
+          <button id="evaluation-evidence-link" class="drawer-link" type="button">View related evidence →</button>
+        </div>
+      </div>
+    </aside>
+
+        <section id="final-decision" class="final-decision-card" hidden>
+          <h2>Your investment decision</h2>
+          <p>Record your choice alongside this assessment. The Rule Gate remains unchanged.</p>
+          <form id="final-decision-form">
+            <label for="final-decision-value">Decision</label>
+            <select id="final-decision-value" required>
+              <option value="">Choose a decision</option>
+              <option value="proceed">Proceed</option>
+              <option value="proceed_with_conditions">Proceed with conditions</option>
+              <option value="pause">Pause</option>
+              <option value="decline">Decline</option>
+            </select>
+            <label for="final-decision-rationale">Reason (optional)</label>
+            <textarea id="final-decision-rationale" maxlength="4000" rows="3"></textarea>
+            <button id="final-decision-submit" class="btn primary" type="submit">Record decision</button>
+            <p id="final-decision-status" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+  </main>
+</div>
+
+<script src="ui.js"></script>
+<script src="access.js"></script>
+<script src="mvp-api.js?v=20260920-manual-action-and-acquisition-stop-fix"></script>
+</body>
+</html>

@@ -37,3 +37,31 @@ outputs/
 
 # Excel 自动检查产生的中间文件
 *.xlsx.inspect.ndjson
+
+# Word 安全处理产生的备份与工作副本
+.docx-backups/
+.docx-review/
+
+# Local-only tools, credentials, environments and runtime state
+.git/
+.cloudflared/
+.codex/
+.codex_node/
+.codex_qa/
+.codex_tmp*/
+.doc-review-readonly/
+.tmp-*/
+.venv/
+venv/
+.runtime/
+.acceptance/
+.ruff_cache/
+.mypy_cache/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+*.sqlite*
+*.db
+*.backup
+*.xlsx.inspect.ndjson

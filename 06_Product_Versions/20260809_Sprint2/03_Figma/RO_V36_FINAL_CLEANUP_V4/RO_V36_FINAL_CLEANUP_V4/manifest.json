@@ -1,0 +1,15 @@
+{
+  "name": "ResearchOps V3.6 \u00b7 Final Unified",
+  "id": "1842756391047285649",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": [
+    "figma"
+  ],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": [
+      "none"
+    ]
+  }
+}

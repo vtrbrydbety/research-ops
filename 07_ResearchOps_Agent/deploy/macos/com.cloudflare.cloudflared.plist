@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.cloudflare.cloudflared</string>
+  <key>UserName</key><string>lanting</string>
+  <key>ProgramArguments</key><array>
+    <string>/Users/lanting/Projects/ResearchOps/researchops-agent/.venv/bin/python</string>
+    <string>-m</string><string>researchops.service_runner</string>
+    <string>--log</string><string>/Users/lanting/Projects/ResearchOps/researchops-agent/.runtime/logs/tunnel.log</string>
+    <string>--</string><string>/opt/homebrew/bin/cloudflared</string>
+    <string>tunnel</string><string>--config</string><string>/etc/cloudflared/config.yml</string>
+    <string>run</string><string>1be9a224-0f36-4d38-87a9-890024dd4e3e</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/lanting/Projects/ResearchOps/researchops-agent</string>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>ThrottleInterval</key><integer>10</integer>
+  <key>ExitTimeOut</key><integer>40</integer>
+  <key>Umask</key><integer>63</integer>
+  <key>StandardOutPath</key><string>/dev/null</string>
+  <key>StandardErrorPath</key><string>/dev/null</string>
+</dict></plist>

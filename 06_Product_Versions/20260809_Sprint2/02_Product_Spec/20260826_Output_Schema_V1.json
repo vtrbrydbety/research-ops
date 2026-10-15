@@ -1,0 +1,125 @@
+{
+  "_serialization_mapping": {
+    "note": "Field Dictionary defines the logical reference model; this Output Schema uses an embedded serialization for MVP output. This does not change Field Dictionary semantics.",
+    "task.target_ref": "target",
+    "task.material_refs": "materials",
+    "task.readiness_result_ref": "readiness_result",
+    "readiness_result.dimension_refs": "readiness_result.dimensions",
+    "dimension.finding_refs": "readiness_result.dimensions[].findings",
+    "readiness_result.overall_gate_ref": "readiness_result.overall_gate",
+    "readiness_result.prioritized_action_refs": "readiness_result.prioritized_actions",
+    "task.feedback_refs": "feedback",
+    "readiness_result.resource_signal_ref": "readiness_result.signals.resource",
+    "readiness_result.evaluation_signal_ref": "readiness_result.signals.evaluation"
+  },
+  "task_id": "TASK-001",
+  "reproduction_goal": "",
+  "target": {
+    "target_id": "TARGET-001",
+    "target_type": "Paper",
+    "target_name": "",
+    "source_entry": "",
+    "resolution_status": "Identified",
+    "resolved_source": null
+  },
+  "materials": [
+    {
+      "material_id": "MAT-001",
+      "material_type": "Paper",
+      "source_locator": "",
+      "title": ""
+    }
+  ],
+  "user_context": {
+    "execution_target": "",
+    "input_mode": "Manual Input",
+    "acquisition_state": "Partial",
+    "os": null,
+    "python_version": null,
+    "framework": null,
+    "cuda_version": null,
+    "driver_version": null,
+    "gpu_vram": null,
+    "disk_available": null,
+    "time_budget": null,
+    "user_provided_facts": []
+  },
+  "analysis_state": null,
+  "readiness_result": {
+    "result_id": "RESULT-001",
+    "dimensions": [
+      {
+        "dimension_id": "RD-01",
+        "dimension_name": "Data & Access Readiness",
+        "analysis_state": null,
+        "status": null,
+        "status_explanation": null,
+        "gate_impact": null,
+        "findings": [
+          {
+            "finding_id": "F-001",
+            "condition": "",
+            "summary": "",
+            "finding_type": "Unknown",
+            "primary_dimension": "RD-01",
+            "related_dimensions": [],
+            "gate_critical": false,
+            "gate_impact": null,
+            "evidence_refs": [
+              "EV-001"
+            ],
+            "next_action_ref": null
+          }
+        ]
+      },
+      {
+        "dimension_id": "RD-02",
+        "dimension_name": "Environment & Dependency Readiness",
+        "analysis_state": null,
+        "status": null,
+        "status_explanation": null,
+        "gate_impact": null,
+        "findings": []
+      },
+      {
+        "dimension_id": "RD-03",
+        "dimension_name": "Weights & Configuration Readiness",
+        "analysis_state": null,
+        "status": null,
+        "status_explanation": null,
+        "gate_impact": null,
+        "findings": []
+      }
+    ],
+    "signals": {
+      "resource": null,
+      "evaluation": null
+    },
+    "evidence": [
+      {
+        "evidence_id": "EV-001",
+        "source_ref": "MAT-001",
+        "source_type": "Material",
+        "location": null,
+        "material_type": "Paper",
+        "summary": "",
+        "verification_status": "Located Only",
+        "finding_ref": "F-001",
+        "conflict_note": null
+      }
+    ],
+    "overall_gate": {
+      "gate_id": "GATE-001",
+      "gate_available": false,
+      "gate_value": null,
+      "gate_reason": null,
+      "trigger_refs": []
+    },
+    "prioritized_actions": []
+  },
+  "interaction_state": {
+    "confirmation": null,
+    "authorization": null
+  },
+  "feedback": []
+}

@@ -1,0 +1,14 @@
+body:not([data-access="ready"]) > :not(#access-gate):not(script) { display: none !important; }
+body[data-access="ready"] #access-gate { display: none; }
+#access-gate { min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box; background: #f7f8fb; }
+#access-form { width: 100%; max-width: 420px; padding: 32px; box-sizing: border-box; background: white; border: 1px solid #e5e7eb; border-radius: 20px; color: #101828; box-shadow: 0 12px 40px #1018280a; }
+.access-brand { font-weight: 800; color: #465fff; }
+#access-form h1 { font-size: 26px; margin: 24px 0 12px; }
+#access-form p { font-size: 14px; line-height: 1.7; color: #667085; }
+#access-form label { display: block; margin: 24px 0 8px; font-size: 14px; }
+#invitation-code { box-sizing: border-box; width: 100%; padding: 12px; border: 1px solid #cbd0d9; border-radius: 8px; font-size: 16px; }
+#access-submit { width: 100%; margin-top: 16px; padding: 12px; background: #465fff; color: white; border: 0; border-radius: 8px; font-size: 16px; cursor: pointer; }
+#access-submit:disabled { opacity: .6; cursor: wait; }
+#access-form .access-note { font-size: 12px; }
+#access-logout { margin-left: auto; background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+body[data-public="true"] [data-mode="readonly"], body[data-public="true"] #detail-readonly { display: none !important; }

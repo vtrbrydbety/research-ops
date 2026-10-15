@@ -1,0 +1,38 @@
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Test and quality caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.runtime/
+
+# Environment variables and secrets
+.env
+.streamlit/secrets.toml
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+
+# Local acceptance caches, private credentials and backups
+.acceptance/
+.env.*
+!.env.example
+*.pem
+*.key
+*.sqlite*
+*.db
+*.backup
+.DS_Store

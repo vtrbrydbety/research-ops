@@ -1,0 +1,218 @@
+你现在需要完成一个科研论文复现前准备判断任务。
+
+【论文】
+Detecting Audio-Visual Deepfakes with Fine-Grained Inconsistencies
+BMVC 2024 official published version
+
+【代码仓库】
+Repository: aseuteurideu/FGI
+Branch: master
+Frozen Commit:
+8c9ea77117878924c29dd87bc5e08a239842ed0f
+
+请以该论文正式版本和上述固定 Commit 对应仓库内容作为主要判断对象。
+你可以按照当前产品正常提供的联网、搜索和网页/仓库读取能力获取必要补充信息。
+
+【用户当前条件】
+
+GPU Model:
+NVIDIA GeForce RTX 2080 Ti
+
+GPU VRAM:
+11 GB per GPU
+
+GPU Count:
+3
+
+System RAM:
+125 GB
+
+Available Disk Space:
+367 GB
+
+Storage Writable:
+Yes
+
+Operating System:
+Ubuntu 18.04.6 LTS
+
+CUDA:
+Unknown
+
+Python:
+Unknown
+
+Deep Learning Framework:
+Unknown
+
+Internet Access:
+Yes
+
+Large-file Download:
+Allowed
+
+Dataset Access / Permission:
+Unknown
+
+Available Time Budget:
+3 days
+
+【Reproduction Goal】
+
+判断当前条件是否值得开始 FGI 复现，并尽快形成一个可用于后续基线实验的可执行复现路径。
+
+【任务】
+
+请基于提供的 FGI 论文、仓库材料以及用户硬件 / 时间约束，判断当前是否适合开始复现。
+
+请输出以下内容：
+
+1. 总体决策：继续 / 有条件继续 / 暂停；
+2. 关键缺失项：当前影响复现准备判断的重要缺失信息；
+3. 主要风险：当前开始复现可能面临的主要风险；
+4. 证据出处：为每个关键结论指出其依据的材料或来源；
+5. 未知项：当前材料无法确认的信息；
+6. 前三步行动：当前最优先执行的三项下一步行动。
+
+若现有信息不足以支持某项判断，必须明确标记为“未知”，不得自行猜测或补造事实。
+
+
+
+
+我会以正式论文、固定 commit 的仓库内容和当前机器约束做一份“是否开跑”的门槛判断，并把事实、推断和未知项明确分开。先核对工作区是否已经是目标 commit，再读取论文与仓库依赖、数据和训练说明。
+
+
+
+
+已运行命令
+
+
+
+
+本地仓库已确认准确位于指定的冻结提交，且工作区没有显示未提交改动。接下来我会重点核实：官方报告的实验目标、数据集门槛、预训练权重/外部模型、显存与运行时约束，以及仓库是否给出了完整可执行入口。
+
+
+
+
+运行了命令已搜索网页已搜索网页 ：Detecting Audio-Visual Deepfakes with Fine-Grained Inconsistencies PDF | bmvc2024.org ...
+
+
+
+已运行命令
+
+
+
+
+已搜索网页 ：https://papers.bmvc2024.org/0695.pdf
+
+
+
+已运行命令
+
+
+
+
+
+
+
+
+
+
+
+
+1. 总体决策：有条件继续
+值得立即开始“环境验证 + 官方权重推理 + 小规模训练”的复现准备，但目前不建议直接投入完整 100 epoch 训练。
+继续的必要条件是：在前 6–12 小时内确认数据授权与下载方式、CUDA/PyTorch 可用性，并用少量视频完成端到端冒烟测试。任一项无法通过，应暂停完整复现。
+判断理由：
+仓库已确认处于指定冻结提交 8c9ea77117878924c29dd87bc5e08a239842ed0f。
+3×RTX 2080 Ti、125 GB RAM 原则上具备运行该模型的基础条件；仓库使用 nn.DataParallel，能够利用多 GPU。但论文没有报告训练硬件或耗时，因此不能保证 3 天内完成完整训练。
+仓库提供了预处理、训练、测试、AUC 计算、固定数据名单和官方权重入口，足以形成基线路径。
+最大障碍不是模型规模，而是数据授权、下载/预处理耗时、磁盘余量及论文—代码参数不一致。
+建议将三天目标定义为：
+官方权重指标验证；
+小规模 DFDC 训练闭环；
+若资源实测允许，再启动完整训练。
+不要把“完整 100 epoch 且达到论文 AUC”设为三天内必须完成的唯一成功标准。
+2. 关键缺失项
+缺失项	影响	当前状态
+DFDC 是否已获 Kaggle 访问权限	FGI 的正式训练使用 DFDC；无数据就无法训练	未知
+FakeAVCeleb 申请是否已获批准	论文跨数据集指标需要该测试集；官方要求提交申请并等待接受	未知
+数据是否已下载、存放位置及实际大小	决定 367 GB 是否够用，也直接影响三天期限	未知
+NVIDIA 驱动、CUDA 和 PyTorch 状态	代码强制使用 CUDA；环境清单指定 CUDA 11.6/PyTorch 1.12.1	未知
+11 GB 显存能否承载官方 batch_size=8	代码模型含 30×224×224 视频序列和 3D 卷积；没有官方显存记录	未知，必须实测
+官方权重当前是否可下载、文件名及校验值	决定能否先建立无需训练的基线	未知
+完整预处理和 100 epoch 的实测耗时	论文和仓库均未提供时间	未知
+要复现的目标表格/容差	表 1、表 2、表 3的数据设置和参数不完全相同	未知
+
+
+3. 主要风险
+高风险：数据访问和磁盘
+论文主实验在 DFDC 上训练，并仅在 FakeAVCeleb 上做跨数据集测试。FakeAVCeleb 官方下载说明要求填写申请表并在批准后取得下载脚本。正式论文、FakeAVCeleb 下载说明
+仓库预处理会生成抽帧、音频、裁脸和最终片段等多个中间目录；README 只允许在完成后删除部分中间目录，并要求保留 pytmp。因此峰值空间会明显高于原始选定视频大小。现有 367 GB 是否够用为未知，不能仅凭最终数据量判断。README、[pre-process.py (line 14)](/C:/Users/12436/Desktop/FGI_Baseline_C/pre-process.py:14)
+冻结仓库的名单包含：
+DFDC 训练：7,650 real + 7,650 fake
+DFDC 测试：407 real + 2,293 fake
+FakeAVCeleb 测试：70 real + 70 fake
+这意味着即使不是使用全部 DFDC，仍需预处理约 18,000 个 DFDC 视频。数量依据仓库固定名单直接统计：[train_real_list.txt](/C:/Users/12436/Desktop/FGI_Baseline_C/train_real_list.txt)、[train_fake_list.txt](/C:/Users/12436/Desktop/FGI_Baseline_C/train_fake_list.txt)、[test_real_list.txt](/C:/Users/12436/Desktop/FGI_Baseline_C/test_real_list.txt)。
+高风险：三天内完成完整训练没有证据保障
+正式论文规定训练 100 epoch、batch size 8，并从 100 个 epoch 中选最低损失模型，但没有提供 GPU 型号、训练时长或预处理时长。因此无法确认 3×2080 Ti 能在三天内完成“数据下载 + 全量预处理 + 100 epoch + 两套测试”。论文实验设置
+仓库使用普通 nn.DataParallel，不是多进程分布式训练；三卡可以被使用，但扩展效率和实际耗时均为未知。[my_train.py (line 127)](/C:/Users/12436/Desktop/FGI_Baseline_C/my_train.py:127)
+高风险：论文和仓库默认训练参数不一致
+正式论文写明：
+Adam
+学习率 1e-3
+weight decay 1e-5
+batch size 8
+100 epoch
+但冻结代码默认学习率为 1e-4，README 的示例命令也没有传入 --lr，因此照抄 README 会实际使用 1e-4。论文实验设置、[my_train.py (line 17)](/C:/Users/12436/Desktop/FGI_Baseline_C/my_train.py:17)、[README.md (line 37)](/C:/Users/12436/Desktop/FGI_Baseline_C/README.md:37)
+此外：
+论文表 2/3 的最终比较采用 rmin=0.3, rmax=1。
+论文一般实验设置和仓库默认值对应接近 rmin≈0（最短 2 帧）、rmax=1。
+README 的官方权重路径名称中出现 lr0.0001。
+因此“正式论文描述的训练配置”和“已发布权重/仓库默认配置”可能不是同一配置。必须分别记录，不能混为一次精确复现。论文最终比较说明、[README.md (line 50)](/C:/Users/12436/Desktop/FGI_Baseline_C/README.md:50)
+中高风险：旧环境可重建性
+仓库环境锁定为 Linux、Python 3.7.16、CUDA Toolkit 11.6、PyTorch 1.12.1+cu116、TorchVision 0.13.1+cu116、TorchAudio 0.12.1+cu116，并包含大量混合 Conda/PyPI 包。Python 3.7 和部分旧二进制包现在可能发生渠道解析或下载失败。[package-list.txt (line 1)](/C:/Users/12436/Desktop/FGI_Baseline_C/package-list.txt:1)
+Ubuntu 18.04 与该旧环境年代相近，不是明显的阻断项；但实际 NVIDIA 驱动能否支持 CUDA 11.6 为未知。
+中风险：显存
+每个样本的视觉输入是 30 帧、3 通道、224×224，模型使用浅层 3D ResNet；代码默认总 batch size 为 8，并交给三卡 DataParallel。正式论文架构、[model.py (line 81)](/C:/Users/12436/Desktop/FGI_Baseline_C/model.py:81)
+11 GB/卡是否足够不能仅从静态代码可靠断定，必须通过一次前向/反向实测。若 OOM，可先把总 batch 降至 3 或 6，但这会改变论文训练设置，必须标注为工程基线而非严格复现。
+中风险：指标口径混淆
+正式论文报告的是视频级 AUC，通过平均一个视频的多个子序列预测得到：
+DFDC：97.7% AUC
+DFDC→FakeAVCeleb：84.5% AUC
+而消融表中的默认配置结果为 97.81%/82.51%，并非同一参数点。因此验收时必须明确比较的是表 1 还是表 2/3。正式论文表 1–3
+4. 证据出处汇总
+论文正式版本、实验协议、输入尺寸、训练参数和目标 AUC：BMVC 2024 正式论文
+BMVC 官方收录及论文身份：BMVC 2024 论文页
+冻结提交与仓库文件：GitHub 固定 commit
+数据准备、训练、测试和官方权重说明：[README.md (line 8)](/C:/Users/12436/Desktop/FGI_Baseline_C/README.md:8)
+精确软件栈：[package-list.txt (line 1)](/C:/Users/12436/Desktop/FGI_Baseline_C/package-list.txt:1)
+CUDA 强制使用及多卡方式：[my_train.py (line 127)](/C:/Users/12436/Desktop/FGI_Baseline_C/my_train.py:127)
+输入张量和网络结构：[model.py (line 73)](/C:/Users/12436/Desktop/FGI_Baseline_C/model.py:73)
+预处理产生的中间目录：[run_pipeline.py (line 240)](/C:/Users/12436/Desktop/FGI_Baseline_C/run_pipeline.py:240)
+FakeAVCeleb 需要申请批准：官方数据下载说明
+5. 未知项
+以下均不能由现有材料确认：
+作者实际使用的 GPU、GPU 数量、显存和训练耗时。
+3×2080 Ti 上的吞吐量、显存峰值及 100 epoch 耗时。
+367 GB 对“当前已有数据 + 下载文件 + 中间文件 + pytmp”是否足够。
+用户是否已经接受 DFDC 竞赛规则、能否通过 Kaggle 下载。
+FakeAVCeleb 申请批准所需时间。
+Google Drive 官方权重是否仍完整可访问以及其哈希值。
+论文表 2/3 的 lr 到底是正文所述 1e-3，还是发布权重名称暗示的 1e-4。
+发布结果是否来自单次运行，以及随机种子波动范围。
+仓库清单中的每个视频是否仍可从当前 DFDC 下载内容逐一恢复。
+预处理失败视频的处理规则、作者最终实际成功纳入的视频数。
+可接受的复现误差范围。
+6. 前三步行动
+先做资源与授权门禁检查。
+记录 nvidia-smi、驱动版本、三卡可见性、Conda/Python 状态；同时确认 DFDC/FakeAVCeleb 权限、已有文件大小和实际可用磁盘。若数据不可访问或预计峰值空间超过 367 GB，立即暂停全量路线。
+
+用官方权重和极小数据完成端到端冒烟测试。
+下载并保存权重校验值；选取少量 real/fake 视频，依次运行预处理、CSV 生成、模型推理和 AUC 脚本。同步测量单样本磁盘膨胀、预处理速度、推理显存，并验证三张 GPU 是否被代码识别。该步骤最快暴露环境、路径、FFmpeg、S3FD 权重和数据格式问题。
+
+运行短训练标定，再决定是否全量。
+使用小规模 CSV 跑 1–3 epoch，先测试官方 batch 8；记录每卡显存、每 epoch 时间和失败率。并建立两个显式配置：
+paper-spec：lr=1e-3，最终比较参数 rmin=0.3, rmax=1；
+released-code：lr=1e-4，按 README/发布权重对应设置。
+根据实测耗时外推 100 epoch。只有当完整预处理和训练预计能落在剩余时间、磁盘与显存预算内，才启动全量训练；否则三天内以“官方权重基线 + 小规模可训练闭环”作为可执行成果。

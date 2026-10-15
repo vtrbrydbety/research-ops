@@ -1,0 +1,5245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ResearchOps — AI-native Layout + Neutral Palette V3.6</title>
+<style>
+  :root{
+    --bg:#f6f7f9;
+    --panel:rgba(255,255,255,.94);
+    --panel-solid:#ffffff;
+    --text:#15171a;
+    --muted:#69707a;
+    --muted-2:#9aa0a8;
+    --line:#e5e7eb;
+    --line-strong:#d8dce2;
+    --soft:#f9fafb;
+    --blue:#2563eb;
+    --violet:#2563eb;
+    --cyan:#2563eb;
+    --green:#166534;
+    --amber:#92400e;
+    --red:#991b1b;
+    --shadow:0 18px 50px rgba(15,23,42,.07);
+    --shadow-soft:0 8px 24px rgba(15,23,42,.05);
+    --r-sm:10px;
+    --r-md:14px;
+    --r-lg:20px;
+    --r-xl:28px;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    color:var(--text);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(37,99,235,.06), transparent 26%),
+      linear-gradient(180deg,#f9fafb 0%,#f6f7f9 42%,#f4f5f7 100%);
+    min-height:100vh;
+  }
+
+  button,input,textarea,select{font:inherit}
+  button{cursor:pointer}
+
+  .app-shell{min-height:100vh}
+
+  .topbar{
+    height:72px;
+    padding:0 28px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(255,255,255,.88);
+    border-bottom:1px solid rgba(16,24,40,.06);
+    backdrop-filter:blur(18px);
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:780;
+    letter-spacing:-.02em;
+  }
+
+  .brand-orb{
+    width:36px;height:36px;border-radius:12px;
+    display:grid;place-items:center;
+    color:#fff;
+    background:#111827;
+    box-shadow:0 8px 20px rgba(15,23,42,.14);
+    font-size:13px;
+    font-weight:900;
+  }
+
+  .top-actions{display:flex;align-items:center;gap:10px}
+  .top-chip{
+    display:flex;align-items:center;gap:7px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.72);
+    color:#475467;
+    border-radius:999px;
+    padding:8px 11px;
+    font-size:12px;
+    box-shadow:0 4px 18px rgba(44,55,100,.04);
+  }
+  .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:#111827;
+    box-shadow:0 0 0 4px rgba(79,124,255,.08);
+  }
+
+  .workspace{
+    max-width:1320px;
+    margin:0 auto;
+    padding:34px 28px 72px;
+  }
+
+  .progressbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+    color:var(--muted);
+    font-size:12px;
+  }
+  .progress-left{display:flex;align-items:center;gap:8px}
+  .spark{
+    width:24px;height:24px;border-radius:8px;
+    display:grid;place-items:center;
+    background:linear-gradient(135deg,rgba(79,124,255,.12),rgba(124,92,255,.12));
+    color:var(--violet);
+    font-size:13px;
+  }
+  .step-wrap{display:flex;align-items:center;gap:8px}
+  .step{
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.68);
+    padding:8px 11px;
+    border-radius:999px;
+    color:#667085;
+  }
+  .step.active{
+    color:#fff;
+    border-color:transparent;
+    background:#111827;
+    box-shadow:0 8px 20px rgba(15,23,42,.12);
+  }
+
+  .screen{display:none}
+  .screen.active{display:block}
+
+  .hero{
+    margin-bottom:24px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:28px;
+  }
+  .hero-copy{max-width:840px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.04em;
+    color:#1d4ed8;
+    background:#eff6ff;
+    border:1px solid #dbeafe;
+    border-radius:999px;
+    padding:7px 10px;
+    margin-bottom:12px;
+  }
+  h1{
+    margin:0;
+    font-size:38px;
+    line-height:1.1;
+    letter-spacing:-.035em;
+    font-weight:820;
+  }
+  .lead{
+    margin:12px 0 0;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.7;
+    max-width:760px;
+  }
+
+  .ai-status{
+    flex:0 0 260px;
+    border:1px solid rgba(79,124,255,.12);
+    background:rgba(255,255,255,.9);
+    border-radius:18px;
+    padding:14px 16px;
+    box-shadow:var(--shadow-soft);
+  }
+  .ai-status-head{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:12px;font-weight:800;color:#344054
+  }
+  .ai-status-sub{
+    margin-top:7px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.5;
+  }
+  .pulse{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 0 5px rgba(22,163,106,.08);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 360px;
+    gap:22px;
+    align-items:start;
+  }
+
+  .glass{
+    background:var(--panel);
+    backdrop-filter:blur(22px);
+    border:1px solid rgba(255,255,255,.78);
+    box-shadow:var(--shadow);
+  }
+
+  .main-card{
+    border-radius:var(--r-xl);
+    overflow:hidden;
+  }
+
+  .main-inner{padding:26px}
+
+  .section{
+    padding:24px 0;
+    border-top:1px solid var(--line);
+  }
+  .section:first-child{padding-top:0;border-top:0}
+
+  .section-head{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:15px;
+  }
+
+  .step-icon{
+    width:30px;height:30px;border-radius:10px;
+    flex:0 0 auto;
+    display:grid;place-items:center;
+    color:#fff;
+    font-size:12px;
+    font-weight:900;
+    background:#111827;
+    box-shadow:0 8px 18px rgba(92,92,255,.16);
+  }
+
+  .section-title{font-size:17px;font-weight:820;letter-spacing:-.01em}
+  .section-desc{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.55;
+  }
+
+  .field-label{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    font-size:12px;
+    font-weight:800;
+    color:#344054;
+    margin-bottom:8px;
+  }
+
+  .field-note{
+    color:var(--muted-2);
+    font-weight:600;
+  }
+
+  .input-shell{
+    border:1px solid rgba(79,124,255,.14);
+    border-radius:14px;
+    background:linear-gradient(180deg,#fff,rgba(250,251,255,.96));
+    box-shadow:0 8px 24px rgba(76,88,135,.05);
+  }
+
+  input,textarea,select{
+    width:100%;
+    border:0;
+    outline:0;
+    color:var(--text);
+    background:transparent;
+  }
+
+  textarea{
+    resize:vertical;
+    min-height:92px;
+    padding:15px 16px;
+    line-height:1.55;
+  }
+
+  .target-row{
+    display:grid;
+    grid-template-columns:160px 1fr;
+  }
+  .target-row select{
+    padding:14px 14px;
+    border-right:1px solid var(--line);
+  }
+  .target-row input{padding:14px 16px}
+
+  .field-focus{
+    box-shadow:0 0 0 4px rgba(79,124,255,.08),0 12px 30px rgba(74,90,156,.06);
+    border-color:rgba(79,124,255,.28);
+  }
+
+  .ai-hint{
+    margin-top:10px;
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    padding:10px 12px;
+    border-radius:12px;
+    background:#f8fafc;
+    color:#5f6680;
+    font-size:12px;
+    line-height:1.55;
+  }
+  .ai-mini{
+    color:#2563eb;
+    font-weight:900;
+    flex:0 0 auto;
+  }
+
+
+  .target-helper{
+    margin-top:8px;
+    padding-left:2px;
+    font-size:10px;
+    line-height:1.5;
+    color:#98a2b3;
+  }
+
+  .materials{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+  }
+  .material{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 10px;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid var(--line);
+    color:#475467;
+    font-size:11px;
+    box-shadow:0 5px 16px rgba(31,42,90,.04);
+  }
+  .material strong{color:#101828}
+  .status-dot{width:6px;height:6px;border-radius:50%}
+  .status-dot.found{background:var(--green)}
+  .status-dot.primary{background:var(--violet)}
+
+  .mode-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .mode{
+    position:relative;
+    text-align:left;
+    min-height:98px;
+    border-radius:16px;
+    padding:15px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.74);
+    transition:.18s ease;
+    overflow:hidden;
+  }
+  .mode:hover{
+    transform:translateY(-1px);
+    border-color:rgba(79,124,255,.18);
+    box-shadow:0 10px 24px rgba(53,70,127,.06);
+  }
+  .mode.active{
+    border-color:rgba(79,124,255,.30);
+    background:#eff6ff;
+    box-shadow:0 0 0 3px rgba(79,124,255,.07);
+  }
+  .mode-title{font-size:13px;font-weight:820;color:#101828}
+  .mode-desc{font-size:11px;line-height:1.55;color:var(--muted);margin-top:6px}
+  .mode-badge{
+    position:absolute;right:12px;top:12px;
+    padding:5px 7px;border-radius:999px;
+    background:rgba(79,124,255,.08);
+    color:#4f62d7;font-size:10px;font-weight:800;
+  }
+
+  .env-card{
+    margin-top:13px;
+    border-radius:16px;
+    padding:14px;
+    background:#111827;
+    color:#fff;
+    box-shadow:0 14px 30px rgba(15,23,42,.14);
+  }
+  .env-top{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .env-title{
+    font-size:11px;font-weight:800;letter-spacing:.04em;
+    text-transform:uppercase;color:#cfd3df
+  }
+  .env-readonly{
+    font-size:10px;font-weight:800;color:#c8f7e3;
+    background:rgba(22,163,106,.14);padding:5px 7px;border-radius:999px;
+  }
+  .env-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+  }
+  .env-item{
+    padding:10px;
+    border-radius:12px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .env-k{font-size:9px;color:#aeb4c3;text-transform:uppercase;letter-spacing:.04em}
+  .env-v{font-size:12px;font-weight:750;margin-top:4px}
+
+  .actions{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:20px;
+  }
+  .actions-right{
+    justify-content:flex-end;
+  }
+  .quiet-action{
+    color:var(--muted);
+    font-size:12px;
+    border:0;
+    background:transparent;
+    padding:8px 0;
+  }
+
+  .btn{
+    border:0;
+    border-radius:12px;
+    padding:12px 16px;
+    font-size:13px;
+    font-weight:820;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn.primary{
+    color:#fff;
+    background:#111827;
+    box-shadow:0 10px 24px rgba(15,23,42,.14);
+  }
+  .btn.secondary{
+    color:#344054;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.75);
+  }
+
+  .side-stack{display:flex;flex-direction:column;gap:14px}
+  .side-card{
+    border-radius:20px;
+    padding:18px;
+  }
+  .side-title{
+    font-size:13px;
+    font-weight:820;
+    letter-spacing:-.01em;
+    display:flex;align-items:center;gap:8px;
+  }
+  .side-copy{
+    margin-top:7px;
+    font-size:12px;
+    line-height:1.55;
+    color:var(--muted);
+  }
+
+  .capability-list{
+    display:flex;flex-direction:column;gap:9px;
+    margin-top:14px;
+  }
+  .cap{
+    display:flex;align-items:flex-start;gap:9px;
+    font-size:12px;line-height:1.45;color:#475467;
+  }
+  .cap-icon{
+    width:20px;height:20px;border-radius:7px;
+    display:grid;place-items:center;
+    flex:0 0 auto;
+    font-size:11px;font-weight:900;
+  }
+  .cap-icon.good{background:rgba(22,163,106,.10);color:var(--green)}
+  .cap-icon.no{background:rgba(220,76,100,.09);color:var(--red)}
+
+  .decision-card{
+    padding:17px;
+    border-radius:18px;
+    background:#ffffff;
+    color:#15171a;
+    border:1px solid #e5e7eb;
+    box-shadow:0 10px 28px rgba(15,23,42,.06);
+  }
+  .decision-head{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:11px;color:#69707a
+  }
+  .decision-main{
+    margin-top:9px;
+    font-size:15px;
+    font-weight:800;
+    line-height:1.35;
+  }
+  .decision-sub{
+    margin-top:7px;
+    color:#69707a;
+    font-size:11px;
+    line-height:1.55;
+  }
+
+  .scope-lock{
+    display:flex;align-items:center;gap:8px;
+    margin-top:12px;
+    padding:10px 11px;
+    border-radius:12px;
+    background:rgba(124,92,255,.07);
+    color:#1d4ed8;
+    font-size:11px;
+    font-weight:750;
+  }
+
+  /* AUTH */
+  .auth-wrap{max-width:940px;margin:0 auto}
+  .auth-card{
+    border-radius:28px;
+    padding:26px;
+  }
+  .auth-head{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:20px;
+    padding-bottom:20px;border-bottom:1px solid var(--line)
+  }
+  .auth-icon{
+    width:44px;height:44px;border-radius:15px;
+    display:grid;place-items:center;
+    color:#fff;font-weight:900;
+    background:#111827;
+    box-shadow:0 10px 24px rgba(92,92,255,.18);
+  }
+  .auth-kicker{font-size:11px;color:#2563eb;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+  .auth-title{font-size:22px;font-weight:820;margin-top:4px}
+  .auth-desc{font-size:12px;line-height:1.6;color:var(--muted);margin-top:6px;max-width:650px}
+
+  .auth-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;
+  }
+  .scope-card{
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:17px;
+    background:rgba(255,255,255,.76);
+  }
+  .scope-card h3{font-size:13px;margin:0 0 12px}
+  .scope-line{display:flex;gap:9px;font-size:12px;color:#475467;line-height:1.45;margin:9px 0}
+  .scope-note{font-size:11px;color:var(--muted);line-height:1.5;margin-top:12px}
+
+  .permission{
+    margin-top:14px;
+    border-radius:16px;
+    padding:14px 15px;
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    background:#f8fafc;
+    border:1px solid rgba(79,124,255,.12);
+  }
+  .permission-title{font-size:12px;font-weight:820}
+  .permission-desc{font-size:11px;line-height:1.5;color:var(--muted);margin-top:4px}
+  .readonly-tag{
+    border-radius:999px;
+    padding:7px 9px;
+    background:rgba(22,163,106,.10);
+    color:var(--green);
+    font-size:10px;font-weight:820;
+    white-space:nowrap;
+  }
+
+  .auth-actions{
+    margin-top:18px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .alt{display:flex;gap:8px;flex-wrap:wrap}
+  .ghost{
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.72);
+    color:#667085;
+    border-radius:999px;
+    padding:8px 10px;
+    font-size:11px;
+    font-weight:750;
+  }
+  .fineprint{
+    margin-top:14px;
+    color:#98a2b3;
+    font-size:10px;
+    line-height:1.55;
+  }
+
+
+  .mode-detail{
+    margin-top:14px;
+    display:none;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.82);
+    padding:16px;
+  }
+  .mode-detail.active{display:block}
+  .detail-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:12px;
+  }
+  .detail-title{font-size:13px;font-weight:820;color:#101828}
+  .detail-desc{font-size:11px;line-height:1.55;color:var(--muted);margin-top:4px}
+  .upload-zone:hover{border-color:#9eb7ef;background:#f8fbff}
+  .manual-field label{
+    display:block;
+    font-size:10px;
+    font-weight:800;
+    color:#475467;
+    margin-bottom:6px;
+  }
+  .manual-field input{
+    width:100%;
+    border:1px solid #d8dce2;
+    border-radius:10px;
+    background:#fff;
+    padding:10px 11px;
+    font-size:12px;
+  }
+  .manual-field input:focus{
+    border-color:#9eb7ef;
+    box-shadow:0 0 0 3px #eff6ff;
+  }
+  .detail-note{
+    margin-top:10px;
+    padding:9px 10px;
+    border-radius:10px;
+    background:#f8fafc;
+    color:#667085;
+    font-size:10px;
+    line-height:1.55;
+  }
+
+
+
+  .file-input{display:none}
+
+  .snapshot-panel{
+    margin-top:14px;
+    display:none;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    background:#ffffff;
+    padding:15px;
+  }
+  .snapshot-panel.active{display:block}
+
+  .snapshot-head{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .snapshot-icon{
+    width:28px;
+    height:28px;
+    border-radius:9px;
+    flex:0 0 auto;
+    display:grid;
+    place-items:center;
+    background:#f3f4f6;
+    color:#475467;
+    font-size:14px;
+    font-weight:900;
+  }
+  .snapshot-title{
+    font-size:12px;
+    font-weight:820;
+    color:#344054;
+  }
+  .snapshot-desc{
+    margin-top:3px;
+    font-size:10px;
+    line-height:1.5;
+    color:#667085;
+  }
+
+  .snapshot-drop{
+    min-height:72px;
+    border:1px dashed #cfd4dc;
+    border-radius:11px;
+    background:#fafafa;
+    padding:12px 13px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    cursor:pointer;
+    transition:.15s ease;
+  }
+  .snapshot-drop:hover{
+    border-color:#9db5e8;
+    background:#f8fbff;
+  }
+  .snapshot-drop-title{
+    font-size:11px;
+    font-weight:800;
+    color:#344054;
+  }
+  .snapshot-drop-copy{
+    margin-top:3px;
+    font-size:9px;
+    line-height:1.45;
+    color:#98a2b3;
+  }
+  .snapshot-choose{
+    flex:0 0 auto;
+    border:1px solid #d8dce2;
+    background:#fff;
+    border-radius:8px;
+    padding:7px 10px;
+    color:#344054;
+    font-size:10px;
+    font-weight:800;
+  }
+
+  .snapshot-file-state{
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-top:9px;
+    padding:9px 10px;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    background:#fff;
+  }
+  .snapshot-file-state.active{display:flex}
+  .snapshot-file-main{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    min-width:0;
+  }
+  .snapshot-file-icon{
+    width:30px;
+    height:30px;
+    border-radius:8px;
+    display:grid;
+    place-items:center;
+    background:#f3f4f6;
+    color:#667085;
+    font-size:8px;
+    font-weight:900;
+  }
+  .snapshot-file-name{
+    font-size:10px;
+    font-weight:800;
+    color:#344054;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:380px;
+  }
+  .snapshot-file-meta{
+    margin-top:2px;
+    color:#98a2b3;
+    font-size:9px;
+  }
+  .snapshot-remove{
+    border:0;
+    background:transparent;
+    color:#667085;
+    font-size:10px;
+    font-weight:800;
+    padding:6px;
+  }
+
+  .readonly-info{
+    margin-top:14px;
+    display:none;
+    align-items:flex-start;
+    gap:11px;
+    padding:13px 14px;
+    border-left:3px solid #2563eb;
+    border-radius:10px;
+    background:#f8fbff;
+    color:#475467;
+  }
+  .readonly-info.active{display:flex}
+  .readonly-info-icon{
+    width:24px;height:24px;
+    border-radius:8px;
+    display:grid;place-items:center;
+    flex:0 0 auto;
+    background:#eff6ff;
+    color:#2563eb;
+    font-size:12px;
+    font-weight:900;
+  }
+  .readonly-info-title{
+    font-size:12px;
+    font-weight:820;
+    color:#344054;
+  }
+  .readonly-info-copy{
+    margin-top:3px;
+    font-size:11px;
+    line-height:1.55;
+    color:#667085;
+  }
+
+  .manual-ai-box{
+    margin-top:14px;
+    display:none;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.84);
+    padding:16px;
+  }
+  .manual-ai-box.active{display:block}
+  .manual-ai-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:11px;
+  }
+  .manual-ai-title{
+    font-size:13px;
+    font-weight:820;
+    color:#101828;
+  }
+  .manual-ai-desc{
+    margin-top:4px;
+    font-size:11px;
+    line-height:1.55;
+    color:#667085;
+  }
+  .manual-textarea{
+    width:100%;
+    min-height:120px;
+    border:1px solid #d8dce2;
+    border-radius:12px;
+    background:#fff;
+    padding:12px 13px;
+    font-size:12px;
+    line-height:1.55;
+    resize:vertical;
+    outline:none;
+  }
+  .manual-textarea:focus{
+    border-color:#9eb7ef;
+    box-shadow:0 0 0 3px #eff6ff;
+  }
+  .example-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:10px;
+  }
+  .example-chip{
+    border:1px solid #e5e7eb;
+    background:#f9fafb;
+    color:#667085;
+    border-radius:999px;
+    padding:6px 8px;
+    font-size:10px;
+    font-weight:700;
+  }
+  .manual-note{
+    margin-top:10px;
+    display:flex;
+    align-items:flex-start;
+    gap:7px;
+    font-size:10px;
+    line-height:1.5;
+    color:#667085;
+  }
+
+
+  .simple-hero{align-items:flex-start}
+  .compact-list{margin-top:2px}
+  .safety-compact{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:14px 15px;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.72);
+  }
+  .safety-lock{
+    width:28px;height:28px;border-radius:9px;
+    display:grid;place-items:center;
+    flex:0 0 auto;
+    background:#f3f4f6;
+    font-size:12px;
+  }
+  .safety-title{font-size:11px;font-weight:820;color:#344054}
+  .safety-copy{margin-top:3px;font-size:10px;line-height:1.5;color:#667085}
+  .auth-page-head{margin-bottom:20px}
+  .auth-mode-row{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding-bottom:16px;border-bottom:1px solid var(--line);
+  }
+  .auth-mode-copy{font-size:10px;color:#667085}
+  .auth-fallback-note{
+    margin-top:14px;
+    padding:10px 11px;
+    border-radius:10px;
+    background:#f8fafc;
+    color:#667085;
+    font-size:10px;
+    line-height:1.5;
+  }
+
+
+  .context-toggle{
+    margin-top:10px;
+    border:0;
+    background:transparent;
+    padding:6px 2px;
+    color:#475467;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:11px;
+    font-weight:800;
+  }
+  .context-toggle:hover{color:#111827}
+  .context-optional{
+    color:#98a2b3;
+    font-size:9px;
+    font-weight:700;
+    margin-left:2px;
+  }
+  .context-panel{
+    display:none;
+    margin-top:8px;
+  }
+  .context-panel.active{display:block}
+  .context-textarea{
+    width:100%;
+    min-height:116px;
+    border:1px solid #d8dce2;
+    border-radius:12px;
+    background:#fff;
+    padding:12px 13px;
+    font-size:11px;
+    line-height:1.55;
+    color:#344054;
+    outline:none;
+    resize:vertical;
+  }
+  .context-textarea:focus{
+    border-color:#9eb7ef;
+    box-shadow:0 0 0 3px #eff6ff;
+  }
+  .context-note{
+    margin-top:7px;
+    font-size:9px;
+    line-height:1.5;
+    color:#98a2b3;
+  }
+
+
+  /* PROCESSING */
+  .processing-wrap{
+    max-width:820px;
+    margin:72px auto 0;
+  }
+  .processing-card{
+    padding:30px;
+    border-radius:24px;
+  }
+  .processing-icon{
+    width:42px;height:42px;border-radius:14px;
+    display:grid;place-items:center;
+    background:#111827;color:#fff;
+    font-size:16px;font-weight:900;
+    margin-bottom:16px;
+  }
+  .processing-title{
+    font-size:22px;
+    font-weight:820;
+    letter-spacing:-.02em;
+  }
+  .processing-copy{
+    margin-top:7px;
+    color:#667085;
+    font-size:12px;
+    line-height:1.6;
+  }
+  .processing-list{
+    margin-top:22px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .processing-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:12px 0;
+    border-top:1px solid var(--line);
+  }
+  .processing-row:first-child{border-top:0}
+  .processing-row-left{
+    display:flex;align-items:center;gap:10px;
+    font-size:12px;color:#344054;font-weight:760;
+  }
+  .processing-state{
+    font-size:10px;
+    font-weight:800;
+    color:#667085;
+  }
+  .spinner{
+    width:16px;height:16px;border-radius:50%;
+    border:2px solid #d8dce2;
+    border-top-color:#2563eb;
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* OVERVIEW */
+  .overview-wrap{
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .overview-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:18px;
+  }
+  .overview-title{
+    font-size:31px;
+    font-weight:830;
+    letter-spacing:-.03em;
+    margin:0;
+  }
+  .overview-back{
+    flex:0 0 auto;
+    margin-top:2px;
+  }
+
+  .gate-card{
+    border:1px solid #e5e7eb;
+    border-radius:20px;
+    background:#fff;
+    padding:20px;
+    box-shadow:0 12px 34px rgba(15,23,42,.06);
+    margin-bottom:16px;
+  }
+  .gate-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .gate-label{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    font-weight:820;
+    color:#667085;
+  }
+  .gate-value{
+    margin-top:6px;
+    font-size:24px;
+    font-weight:860;
+    letter-spacing:-.02em;
+  }
+  .gate-reason{
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+  .gate-reason-label{
+    font-size:10px;
+    font-weight:820;
+    color:#667085;
+    margin-bottom:4px;
+  }
+  .gate-reason-text{
+    font-size:13px;
+    line-height:1.55;
+    color:#344054;
+  }
+
+  .dimension-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:16px;
+  }
+  .dimension-card{
+    border:1px solid #e5e7eb;
+    border-radius:17px;
+    background:#fff;
+    padding:16px;
+    box-shadow:0 8px 24px rgba(15,23,42,.04);
+  }
+  .dimension-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .dimension-id{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .dimension-name{
+    margin-top:4px;
+    font-size:13px;
+    font-weight:820;
+    line-height:1.35;
+    color:#101828;
+  }
+  .status-chip{
+    border-radius:999px;
+    padding:5px 8px;
+    font-size:9px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .status-unknown{background:#f2f4f7;color:#475467}
+  .status-warning{background:#fff7e6;color:#9a6700}
+  .status-ready{background:#edf9f1;color:#166534}
+  .status-blocked{background:#fef2f2;color:#991b1b}
+  .dimension-copy{
+    margin-top:12px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.5;
+    min-height:50px;
+  }
+  .dimension-impact{
+    margin-top:11px;
+    padding-top:10px;
+    border-top:1px solid var(--line);
+    font-size:9px;
+    color:#98a2b3;
+  }
+  .dimension-action{
+    margin-top:10px;
+    border:0;
+    background:transparent;
+    padding:0;
+    color:#2563eb;
+    font-size:10px;
+    font-weight:820;
+  }
+
+  .overview-lower{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .focus-card{
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    background:#fff;
+    padding:17px;
+  }
+  .focus-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .focus-title{
+    margin-top:6px;
+    font-size:15px;
+    font-weight:830;
+    line-height:1.4;
+    color:#101828;
+  }
+  .focus-copy{
+    margin-top:6px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.55;
+  }
+  .focus-meta{
+    margin-top:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .meta-chip{
+    border-radius:999px;
+    padding:5px 7px;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    color:#667085;
+    font-size:9px;
+    font-weight:760;
+  }
+
+  .next-action-card{
+    border:1px solid #d9e4ff;
+    border-radius:18px;
+    background:#f8fbff;
+    padding:17px;
+  }
+  .next-action-priority{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    border-radius:999px;
+    padding:5px 7px;
+    background:#eaf2ff;
+    color:#1d4ed8;
+    font-size:9px;
+    font-weight:850;
+  }
+  .next-action-title{
+    margin-top:9px;
+    font-size:15px;
+    font-weight:830;
+    line-height:1.4;
+    color:#101828;
+  }
+  .next-action-copy{
+    margin-top:6px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.55;
+  }
+  .next-action-type{
+    margin-top:11px;
+    font-size:9px;
+    color:#98a2b3;
+  }
+
+  .signals-section{
+    margin-top:2px;
+  }
+  .signals-section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:9px;
+  }
+  .signals-title{
+    font-size:11px;
+    font-weight:820;
+    color:#667085;
+  }
+  .signals-note{
+    font-size:9px;
+    color:#98a2b3;
+  }
+  .signal-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .signal-card{
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    background:rgba(255,255,255,.74);
+    padding:13px 14px;
+  }
+  .signal-card-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .signal-name{
+    font-size:11px;
+    font-weight:820;
+    color:#344054;
+  }
+  .signal-status{
+    border-radius:999px;
+    padding:5px 7px;
+    font-size:9px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .signal-status.unknown{background:#f2f4f7;color:#475467}
+  .signal-status.warning{background:#fff7e6;color:#9a6700}
+  .signal-summary{
+    margin-top:8px;
+    color:#667085;
+    font-size:10px;
+    line-height:1.5;
+  }
+  .signal-detail-btn{
+    margin-top:10px;
+    border:0;
+    padding:0;
+    background:transparent;
+    color:#2563eb;
+    font-size:10px;
+    font-weight:820;
+  }
+
+  .drawer-backdrop{
+    position:fixed;
+    inset:0;
+    display:none;
+    background:rgba(15,23,42,.22);
+    z-index:90;
+  }
+  .drawer-backdrop.active{display:block}
+  .signal-drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    width:min(460px,92vw);
+    height:100vh;
+    transform:translateX(102%);
+    transition:.2s ease;
+    background:#fff;
+    z-index:100;
+    box-shadow:-18px 0 48px rgba(15,23,42,.14);
+    padding:24px;
+    overflow:auto;
+  }
+  .signal-drawer.active{transform:translateX(0)}
+  .drawer-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    padding-bottom:16px;
+    border-bottom:1px solid var(--line);
+  }
+  .drawer-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .drawer-title{
+    margin-top:5px;
+    font-size:19px;
+    font-weight:830;
+    color:#101828;
+  }
+  .drawer-close{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:9px;
+    padding:7px 9px;
+    color:#667085;
+    font-size:11px;
+  }
+  .drawer-section{
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .drawer-section:last-child{border-bottom:0}
+  .drawer-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .drawer-value{
+    margin-top:6px;
+    font-size:12px;
+    line-height:1.55;
+    color:#344054;
+  }
+  .resource-table{
+    margin-top:9px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .resource-row{
+    display:grid;
+    grid-template-columns:100px 1fr 1fr;
+    gap:8px;
+    padding:9px 10px;
+    border-top:1px solid var(--line);
+    font-size:10px;
+    line-height:1.45;
+  }
+  .resource-row:first-child{border-top:0}
+  .resource-row.header{
+    background:#f8fafc;
+    color:#98a2b3;
+    font-weight:800;
+  }
+  .resource-type{font-weight:800;color:#475467}
+  .drawer-link{
+    margin-top:9px;
+    border:0;
+    background:transparent;
+    padding:0;
+    color:#2563eb;
+    font-size:10px;
+    font-weight:820;
+  }
+
+  @media(max-width:760px){
+    .signal-grid{grid-template-columns:1fr}
+  }
+
+
+
+
+  /* SCREEN 03 — DIMENSION DETAIL */
+  .dimension-detail-wrap{
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .dimension-detail-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:18px;
+    margin-bottom:18px;
+  }
+  .dimension-detail-kicker{
+    font-size:10px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .dimension-detail-title{
+    margin:5px 0 0;
+    font-size:28px;
+    font-weight:840;
+    letter-spacing:-.025em;
+    color:#101828;
+  }
+  .dimension-summary-card{
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    background:#fff;
+    padding:17px 18px;
+  }
+  .dimension-summary-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .dimension-status-line{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .dimension-status-copy{
+    padding-top:2px;
+    font-size:12px;
+    line-height:1.55;
+    color:#475467;
+  }
+  .dimension-gate-impact{
+    margin-top:13px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+  }
+  .impact-title{
+    font-size:10px;
+    font-weight:820;
+    color:#667085;
+  }
+  .impact-copy{
+    margin-top:4px;
+    font-size:11px;
+    line-height:1.5;
+    color:#475467;
+  }
+  .detail-section{
+    margin-top:16px;
+  }
+  .detail-section-title{
+    font-size:12px;
+    font-weight:840;
+    color:#344054;
+    margin-bottom:9px;
+  }
+  .finding-card{
+    border:1px solid #e5e7eb;
+    border-radius:17px;
+    background:#fff;
+    padding:16px;
+  }
+  .finding-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .finding-condition{
+    font-size:10px;
+    font-weight:820;
+    color:#667085;
+  }
+  .finding-title{
+    margin-top:5px;
+    font-size:15px;
+    line-height:1.4;
+    font-weight:830;
+    color:#101828;
+  }
+  .finding-summary{
+    margin-top:7px;
+    font-size:11px;
+    line-height:1.55;
+    color:#667085;
+  }
+  .finding-tags{
+    margin-top:12px;
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+  }
+  .finding-tag{
+    border:1px solid #e5e7eb;
+    background:#f8fafc;
+    color:#667085;
+    border-radius:999px;
+    padding:5px 7px;
+    font-size:9px;
+    font-weight:760;
+  }
+  .finding-tag.critical{
+    border-color:#f0d9a6;
+    background:#fff7e6;
+    color:#9a6700;
+  }
+  .finding-bottom{
+    margin-top:13px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .finding-impact{
+    font-size:9px;
+    color:#98a2b3;
+    line-height:1.45;
+  }
+  .finding-action{
+    border:0;
+    background:transparent;
+    padding:0;
+    color:#2563eb;
+    font-size:10px;
+    font-weight:820;
+  }
+  .related-action-card{
+    border:1px solid #d9e4ff;
+    border-radius:17px;
+    background:#f8fbff;
+    padding:15px 16px;
+  }
+  .related-action-title{
+    margin-top:6px;
+    font-size:14px;
+    font-weight:830;
+    color:#101828;
+  }
+  .related-action-type{
+    margin-top:7px;
+    font-size:9px;
+    color:#667085;
+  }
+
+
+  .finding-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .muted-action{color:#667085}
+
+  .feedback-backdrop{
+    position:fixed;
+    inset:0;
+    display:none;
+    background:rgba(15,23,42,.22);
+    z-index:160;
+  }
+  .feedback-backdrop.active{display:block}
+
+  .feedback-panel{
+    position:fixed;
+    right:0;
+    top:0;
+    width:min(440px,92vw);
+    height:100vh;
+    background:#fff;
+    z-index:170;
+    transform:translateX(102%);
+    transition:.2s ease;
+    box-shadow:-18px 0 48px rgba(15,23,42,.14);
+    padding:22px;
+    overflow:auto;
+  }
+  .feedback-panel.active{transform:translateX(0)}
+  .feedback-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    padding-bottom:15px;
+    border-bottom:1px solid var(--line);
+  }
+  .feedback-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .feedback-title{
+    margin-top:5px;
+    font-size:19px;
+    font-weight:830;
+    color:#101828;
+  }
+  .feedback-close{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:9px;
+    padding:7px 9px;
+    color:#667085;
+    font-size:11px;
+  }
+  .feedback-copy{
+    margin-top:14px;
+    font-size:11px;
+    line-height:1.55;
+    color:#667085;
+  }
+  .feedback-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:14px;
+  }
+  .feedback-option{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:12px;
+    padding:11px 12px;
+    text-align:left;
+    font-size:11px;
+    font-weight:800;
+    color:#475467;
+  }
+  .feedback-option.active{
+    border-color:#9eb7ef;
+    background:#f8fbff;
+    box-shadow:0 0 0 3px #eff6ff;
+    color:#1d4ed8;
+  }
+  .feedback-input-wrap{
+    display:none;
+    margin-top:14px;
+  }
+  .feedback-input-wrap.active{display:block}
+  .feedback-textarea{
+    width:100%;
+    min-height:120px;
+    border:1px solid #d8dce2;
+    border-radius:12px;
+    background:#fff;
+    padding:12px 13px;
+    font-size:11px;
+    line-height:1.55;
+    resize:vertical;
+    outline:none;
+  }
+  .feedback-textarea:focus{
+    border-color:#9eb7ef;
+    box-shadow:0 0 0 3px #eff6ff;
+  }
+  .feedback-note{
+    margin-top:9px;
+    font-size:9px;
+    line-height:1.5;
+    color:#98a2b3;
+  }
+  .feedback-submit{
+    margin-top:16px;
+    width:100%;
+    justify-content:center;
+  }
+  .feedback-error{
+    display:none;
+    margin-top:12px;
+    padding:9px 10px;
+    border-radius:10px;
+    background:#fef2f2;
+    color:#991b1b;
+    font-size:10px;
+    line-height:1.5;
+  }
+  .feedback-error.active{display:block}
+  .feedback-success{
+    display:none;
+    margin-top:13px;
+    padding:10px 11px;
+    border-radius:10px;
+    background:#f0fdf4;
+    color:#166534;
+    font-size:10px;
+    line-height:1.5;
+  }
+  .feedback-success.active{display:block}
+
+
+  /* EVIDENCE DRAWER */
+  .evidence-backdrop{
+    position:fixed;
+    inset:0;
+    display:none;
+    background:rgba(15,23,42,.22);
+    z-index:130;
+  }
+  .evidence-backdrop.active{display:block}
+
+  .evidence-drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    width:min(500px,94vw);
+    height:100vh;
+    background:#fff;
+    z-index:140;
+    transform:translateX(102%);
+    transition:.2s ease;
+    box-shadow:-18px 0 48px rgba(15,23,42,.14);
+    padding:22px;
+    overflow:auto;
+  }
+  .evidence-drawer.active{transform:translateX(0)}
+
+  .evidence-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    padding-bottom:15px;
+    border-bottom:1px solid var(--line);
+  }
+  .evidence-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .evidence-title{
+    margin-top:5px;
+    font-size:19px;
+    line-height:1.35;
+    font-weight:830;
+    color:#101828;
+  }
+  .evidence-close{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:9px;
+    padding:7px 9px;
+    color:#667085;
+    font-size:11px;
+    flex:0 0 auto;
+  }
+
+  .verification-row{
+    margin-top:15px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .verification-label{
+    font-size:10px;
+    font-weight:820;
+    color:#667085;
+  }
+  .verification-chip{
+    border-radius:999px;
+    padding:5px 8px;
+    font-size:9px;
+    font-weight:850;
+    background:#f2f4f7;
+    color:#475467;
+  }
+  .verification-chip.corroborated{
+    background:#edf9f1;
+    color:#166534;
+  }
+  .verification-chip.unverifiable{
+    background:#fef2f2;
+    color:#991b1b;
+  }
+
+  .evidence-section{
+    padding:15px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .evidence-section:last-child{border-bottom:0}
+  .evidence-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .evidence-value{
+    margin-top:6px;
+    font-size:11px;
+    line-height:1.58;
+    color:#344054;
+  }
+  .source-meta{
+    margin-top:8px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .source-meta-item{
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:9px 10px;
+    background:#fafafa;
+  }
+  .source-meta-label{
+    font-size:8px;
+    font-weight:820;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .source-meta-value{
+    margin-top:4px;
+    font-size:10px;
+    line-height:1.45;
+    color:#475467;
+    word-break:break-word;
+  }
+
+  .conflict-box{
+    display:none;
+    margin-top:9px;
+    padding:10px 11px;
+    border-radius:11px;
+    background:#f8fafc;
+    border-left:3px solid #98a2b3;
+    font-size:10px;
+    line-height:1.55;
+    color:#667085;
+  }
+  .conflict-box.active{display:block}
+
+  .evidence-actions{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .evidence-feedback-btn{
+    border:0;
+    background:transparent;
+    padding:0;
+    font-size:10px;
+    font-weight:820;
+    color:#667085;
+  }
+  .open-source-btn{
+    border:0;
+    border-radius:10px;
+    background:#111827;
+    color:#fff;
+    padding:10px 12px;
+    font-size:10px;
+    font-weight:820;
+  }
+
+  .evidence-feedback-inline{
+    display:none;
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+  .evidence-feedback-inline.active{display:block}
+  .evidence-feedback-options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:9px;
+  }
+  .evidence-feedback-option{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:999px;
+    padding:6px 8px;
+    font-size:9px;
+    font-weight:800;
+    color:#667085;
+  }
+  .evidence-feedback-option.active{
+    border-color:#9eb7ef;
+    background:#f8fbff;
+    color:#1d4ed8;
+  }
+  .evidence-feedback-textarea{
+    display:none;
+    width:100%;
+    min-height:96px;
+    margin-top:10px;
+    border:1px solid #d8dce2;
+    border-radius:11px;
+    padding:10px 11px;
+    font-size:10px;
+    line-height:1.55;
+    resize:vertical;
+    outline:none;
+  }
+  .evidence-feedback-textarea.active{display:block}
+  .evidence-feedback-submit{
+    display:none;
+    width:100%;
+    margin-top:10px;
+    justify-content:center;
+  }
+  .evidence-feedback-submit.active{display:flex}
+  .evidence-feedback-state{
+    display:none;
+    margin-top:9px;
+    padding:9px 10px;
+    border-radius:10px;
+    font-size:9px;
+    line-height:1.5;
+  }
+  .evidence-feedback-state.error{
+    display:block;
+    background:#fef2f2;
+    color:#991b1b;
+  }
+  .evidence-feedback-state.success{
+    display:block;
+    background:#f0fdf4;
+    color:#166534;
+  }
+
+
+  /* PARTIAL RESULT VARIANT */
+  .partial-wrap{
+    max-width:760px;
+    margin:0 auto;
+  }
+  .partial-card{
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    background:#fff;
+    padding:22px;
+    box-shadow:0 12px 34px rgba(15,23,42,.05);
+  }
+  .partial-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .partial-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .partial-title{
+    margin:5px 0 0;
+    font-size:26px;
+    font-weight:840;
+    letter-spacing:-.025em;
+    color:#101828;
+  }
+  .partial-state{
+    border-radius:999px;
+    background:#f2f4f7;
+    color:#475467;
+    padding:6px 9px;
+    font-size:9px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .partial-copy{
+    margin-top:10px;
+    max-width:650px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.6;
+  }
+  .partial-note{
+    margin-top:16px;
+    padding:10px 11px;
+    border-radius:11px;
+    background:#f8fafc;
+    color:#667085;
+    font-size:10px;
+    line-height:1.5;
+  }
+  .partial-progress{
+    margin-top:17px;
+    border:1px solid #e5e7eb;
+    border-radius:15px;
+    overflow:hidden;
+  }
+  .partial-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:12px 13px;
+    border-top:1px solid #e5e7eb;
+  }
+  .partial-row:first-child{border-top:0}
+  .partial-row-title{
+    font-size:11px;
+    font-weight:800;
+    color:#344054;
+  }
+  .partial-row-copy{
+    margin-top:3px;
+    font-size:9px;
+    color:#98a2b3;
+  }
+  .partial-row-state{
+    font-size:9px;
+    font-weight:830;
+    color:#667085;
+    white-space:nowrap;
+  }
+  .partial-row-state.available{color:#166534}
+  .partial-row-state.processing{color:#475467}
+  .partial-actions{
+    margin-top:17px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:9px;
+  }
+
+
+  /* TARGET SKIP CONFIRMATION */
+  .skip-confirm-backdrop{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(15,23,42,.28);
+    z-index:190;
+  }
+  .skip-confirm-backdrop.active{display:flex}
+
+  .skip-confirm-modal{
+    width:min(460px,94vw);
+    border-radius:18px;
+    background:#fff;
+    box-shadow:0 24px 70px rgba(15,23,42,.20);
+    padding:20px;
+  }
+  .skip-confirm-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .skip-confirm-title{
+    margin-top:5px;
+    font-size:19px;
+    font-weight:830;
+    color:#101828;
+  }
+  .skip-confirm-copy{
+    margin-top:10px;
+    font-size:11px;
+    line-height:1.6;
+    color:#667085;
+  }
+  .skip-confirm-warning{
+    margin-top:13px;
+    padding:10px 11px;
+    border-radius:11px;
+    border-left:3px solid #d98b22;
+    background:#fffaf0;
+    color:#6b5a3a;
+    font-size:10px;
+    line-height:1.55;
+  }
+  .skip-confirm-actions{
+    margin-top:17px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:9px;
+  }
+
+
+  /* ACQUISITION FAILURE VARIANT */
+  .failure-wrap{
+    max-width:760px;
+    margin:0 auto;
+  }
+  .failure-card{
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    background:#fff;
+    padding:22px;
+    box-shadow:0 12px 34px rgba(15,23,42,.05);
+  }
+  .failure-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .failure-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .failure-title{
+    margin:5px 0 0;
+    font-size:26px;
+    font-weight:840;
+    letter-spacing:-.025em;
+    color:#101828;
+  }
+  .failure-state{
+    border-radius:999px;
+    background:#eef2f6;
+    color:#475467;
+    padding:6px 9px;
+    font-size:9px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .failure-copy{
+    margin-top:10px;
+    max-width:650px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.6;
+  }
+  .failure-boundary{
+    margin-top:15px;
+    padding:11px 12px;
+    border-radius:11px;
+    background:#f8fafc;
+    color:#475467;
+    font-size:10px;
+    line-height:1.55;
+  }
+  .failure-detail{
+    margin-top:16px;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:13px 14px;
+    background:#fff;
+  }
+  .failure-detail-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .failure-detail-title{
+    margin-top:5px;
+    font-size:12px;
+    font-weight:820;
+    color:#344054;
+  }
+  .failure-detail-copy{
+    margin-top:5px;
+    font-size:10px;
+    line-height:1.55;
+    color:#667085;
+  }
+  .failure-actions{
+    margin-top:18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .failure-alt{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+
+  /* CONFLICT VARIANT */
+  .conflict-wrap{
+    max-width:820px;
+    margin:0 auto;
+  }
+  .conflict-card{
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    background:#fff;
+    padding:22px;
+    box-shadow:0 12px 34px rgba(15,23,42,.05);
+  }
+  .conflict-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .conflict-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .conflict-title{
+    margin:5px 0 0;
+    font-size:26px;
+    font-weight:840;
+    letter-spacing:-.025em;
+    color:#101828;
+  }
+  .conflict-state{
+    border-radius:999px;
+    background:#eef2f6;
+    color:#475467;
+    padding:6px 9px;
+    font-size:9px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .conflict-copy{
+    margin-top:10px;
+    max-width:680px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.6;
+  }
+  .conflict-boundary{
+    margin-top:15px;
+    padding:10px 11px;
+    border-radius:11px;
+    background:#f8fafc;
+    color:#667085;
+    font-size:10px;
+    line-height:1.55;
+  }
+  .conflict-sources{
+    margin-top:17px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .conflict-source{
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:13px;
+    background:#fff;
+  }
+  .conflict-source-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .conflict-source-title{
+    margin-top:5px;
+    font-size:12px;
+    font-weight:820;
+    color:#344054;
+  }
+  .conflict-source-value{
+    margin-top:7px;
+    font-size:11px;
+    line-height:1.55;
+    color:#475467;
+  }
+  .conflict-source-meta{
+    margin-top:9px;
+    font-size:9px;
+    color:#98a2b3;
+  }
+  .conflict-rule{
+    margin-top:13px;
+    padding:10px 11px;
+    border-left:3px solid #98a2b3;
+    border-radius:10px;
+    background:#f8fafc;
+    color:#667085;
+    font-size:10px;
+    line-height:1.55;
+  }
+  .conflict-actions{
+    margin-top:18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .conflict-alt{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  @media(max-width:680px){
+    .conflict-sources{grid-template-columns:1fr}
+  }
+
+
+  /* GATE NOT AVAILABLE YET VARIANT */
+  .gate-na-wrap{
+    max-width:800px;
+    margin:0 auto;
+  }
+  .gate-na-card{
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    background:#fff;
+    padding:22px;
+    box-shadow:0 12px 34px rgba(15,23,42,.05);
+  }
+  .gate-na-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .gate-na-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .gate-na-title{
+    margin:5px 0 0;
+    font-size:26px;
+    font-weight:840;
+    letter-spacing:-.025em;
+    color:#101828;
+  }
+  .gate-na-state{
+    border-radius:999px;
+    background:#f2f4f7;
+    color:#475467;
+    padding:6px 9px;
+    font-size:9px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .gate-na-copy{
+    margin-top:10px;
+    max-width:680px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.6;
+  }
+  .gate-na-boundary{
+    margin-top:15px;
+    padding:10px 11px;
+    border-radius:11px;
+    background:#f8fafc;
+    color:#667085;
+    font-size:10px;
+    line-height:1.55;
+  }
+  .gate-na-list{
+    margin-top:17px;
+    border:1px solid #e5e7eb;
+    border-radius:15px;
+    overflow:hidden;
+  }
+  .gate-na-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:12px 13px;
+    border-top:1px solid #e5e7eb;
+  }
+  .gate-na-row:first-child{border-top:0}
+  .gate-na-row-title{
+    font-size:11px;
+    font-weight:800;
+    color:#344054;
+  }
+  .gate-na-row-copy{
+    margin-top:3px;
+    font-size:9px;
+    line-height:1.45;
+    color:#98a2b3;
+  }
+  .gate-na-row-state{
+    font-size:9px;
+    font-weight:830;
+    color:#667085;
+    white-space:nowrap;
+  }
+  .gate-na-row-state.available{color:#166534}
+  .gate-na-actions{
+    margin-top:18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+
+  /* BLOCKED / PAUSE VARIANT */
+  .pause-wrap{
+    max-width:900px;
+    margin:0 auto;
+  }
+  .pause-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:16px;
+  }
+  .pause-title{
+    margin:0;
+    font-size:30px;
+    font-weight:840;
+    letter-spacing:-.03em;
+    color:#101828;
+  }
+  .pause-back{
+    flex:0 0 auto;
+  }
+  .pause-gate{
+    border:1px solid #f1caca;
+    border-radius:20px;
+    background:#fff;
+    padding:19px;
+  }
+  .pause-gate-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .pause-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .pause-value{
+    margin-top:5px;
+    font-size:26px;
+    font-weight:860;
+    letter-spacing:-.02em;
+    color:#991b1b;
+  }
+  .pause-chip{
+    border-radius:999px;
+    background:#fef2f2;
+    color:#991b1b;
+    padding:6px 9px;
+    font-size:9px;
+    font-weight:850;
+  }
+  .pause-reason{
+    margin-top:14px;
+    padding-top:13px;
+    border-top:1px solid #f3e3e3;
+  }
+  .pause-reason-label{
+    font-size:9px;
+    font-weight:830;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .pause-reason-text{
+    margin-top:5px;
+    font-size:13px;
+    line-height:1.55;
+    color:#344054;
+  }
+
+  .pause-lower{
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:1.08fr .92fr;
+    gap:10px;
+  }
+  .pause-blocker,
+  .pause-action{
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    background:#fff;
+    padding:15px;
+  }
+  .pause-blocker{
+    border-color:#efc2c2;
+  }
+  .pause-section-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .pause-section-title{
+    margin-top:6px;
+    font-size:14px;
+    line-height:1.45;
+    font-weight:830;
+    color:#101828;
+  }
+  .pause-section-copy{
+    margin-top:6px;
+    font-size:10px;
+    line-height:1.55;
+    color:#667085;
+  }
+  .pause-evidence{
+    margin-top:11px;
+    padding:10px 11px;
+    border-radius:11px;
+    background:#fef2f2;
+    color:#7f1d1d;
+    font-size:10px;
+    line-height:1.55;
+  }
+  .pause-action-type{
+    margin-top:9px;
+    font-size:9px;
+    color:#667085;
+  }
+
+  @media(max-width:760px){
+    .pause-lower{grid-template-columns:1fr}
+    .pause-head{flex-direction:column}
+  }
+
+
+  /* READY / PROCEED VARIANT */
+  .proceed-wrap{
+    max-width:900px;
+    margin:0 auto;
+  }
+  .proceed-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:16px;
+  }
+  .proceed-title{
+    margin:0;
+    font-size:30px;
+    font-weight:840;
+    letter-spacing:-.03em;
+    color:#101828;
+  }
+  .proceed-gate{
+    border:1px solid #cfe8d6;
+    border-radius:20px;
+    background:#fff;
+    padding:19px;
+  }
+  .proceed-gate-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .proceed-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .proceed-value{
+    margin-top:5px;
+    font-size:26px;
+    font-weight:860;
+    letter-spacing:-.02em;
+    color:#166534;
+  }
+  .proceed-chip{
+    border-radius:999px;
+    background:#edf9f1;
+    color:#166534;
+    padding:6px 9px;
+    font-size:9px;
+    font-weight:850;
+  }
+  .proceed-reason{
+    margin-top:14px;
+    padding-top:13px;
+    border-top:1px solid #e3f0e7;
+  }
+  .proceed-reason-label{
+    font-size:9px;
+    font-weight:830;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .proceed-reason-text{
+    margin-top:5px;
+    font-size:13px;
+    line-height:1.55;
+    color:#344054;
+  }
+  .proceed-lower{
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:1.08fr .92fr;
+    gap:10px;
+  }
+  .proceed-summary,
+  .proceed-action{
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    background:#fff;
+    padding:15px;
+  }
+  .proceed-section-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .proceed-section-title{
+    margin-top:6px;
+    font-size:14px;
+    line-height:1.45;
+    font-weight:830;
+    color:#101828;
+  }
+  .proceed-section-copy{
+    margin-top:6px;
+    font-size:10px;
+    line-height:1.55;
+    color:#667085;
+  }
+  .proceed-signal{
+    margin-top:11px;
+    padding:10px 11px;
+    border-radius:11px;
+    background:#f8fafc;
+    color:#667085;
+    font-size:10px;
+    line-height:1.55;
+  }
+  .proceed-action-type{
+    margin-top:9px;
+    font-size:9px;
+    color:#667085;
+  }
+
+  @media(max-width:760px){
+    .proceed-lower{grid-template-columns:1fr}
+    .proceed-head{flex-direction:column}
+  }
+
+
+  /* TARGET IDENTIFIED — supporting state */
+  .identified-wrap{
+    max-width:760px;
+    margin:0 auto;
+  }
+  .identified-card{
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    background:#fff;
+    padding:22px;
+    box-shadow:0 12px 34px rgba(15,23,42,.05);
+  }
+  .identified-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .identified-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .identified-title{
+    margin:5px 0 0;
+    font-size:26px;
+    font-weight:840;
+    letter-spacing:-.025em;
+    color:#101828;
+  }
+  .identified-state{
+    border-radius:999px;
+    background:#edf9f1;
+    color:#166534;
+    padding:6px 9px;
+    font-size:9px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .identified-copy{
+    margin-top:10px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.6;
+  }
+  .identified-meta{
+    margin-top:16px;
+    border:1px solid #e5e7eb;
+    border-radius:15px;
+    overflow:hidden;
+  }
+  .identified-row{
+    display:grid;
+    grid-template-columns:140px 1fr;
+    gap:12px;
+    padding:11px 13px;
+    border-top:1px solid #e5e7eb;
+  }
+  .identified-row:first-child{border-top:0}
+  .identified-label{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .identified-value{
+    font-size:10px;
+    line-height:1.5;
+    color:#344054;
+    word-break:break-word;
+  }
+  .identified-actions{
+    margin-top:17px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  /* AUTHORIZATION DENIED — supporting state */
+  .auth-denied-wrap{
+    max-width:760px;
+    margin:0 auto;
+  }
+  .auth-denied-card{
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    background:#fff;
+    padding:22px;
+    box-shadow:0 12px 34px rgba(15,23,42,.05);
+  }
+  .auth-denied-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .auth-denied-kicker{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .auth-denied-title{
+    margin:5px 0 0;
+    font-size:26px;
+    font-weight:840;
+    letter-spacing:-.025em;
+    color:#101828;
+  }
+  .auth-denied-state{
+    border-radius:999px;
+    background:#eef2f6;
+    color:#475467;
+    padding:6px 9px;
+    font-size:9px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+  .auth-denied-copy{
+    margin-top:10px;
+    color:#667085;
+    font-size:11px;
+    line-height:1.6;
+  }
+  .auth-denied-boundary{
+    margin-top:15px;
+    padding:10px 11px;
+    border-radius:11px;
+    background:#f8fafc;
+    color:#667085;
+    font-size:10px;
+    line-height:1.55;
+  }
+  .auth-denied-actions{
+    margin-top:17px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .auth-denied-alt{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .auth-decision{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  /* CONFLICT EVIDENCE COMPARISON */
+  .evidence-conflict-compare{
+    display:none;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:10px;
+  }
+  .evidence-conflict-compare.active{display:grid}
+  .evidence-conflict-source{
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    background:#fafafa;
+    padding:10px;
+  }
+  .evidence-conflict-source-label{
+    font-size:8px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .evidence-conflict-source-title{
+    margin-top:4px;
+    font-size:10px;
+    font-weight:820;
+    color:#344054;
+  }
+  .evidence-conflict-source-copy{
+    margin-top:5px;
+    font-size:9px;
+    line-height:1.5;
+    color:#667085;
+  }
+
+  @media(max-width:680px){
+    .identified-row{grid-template-columns:1fr}
+    .evidence-conflict-compare{grid-template-columns:1fr}
+  }
+
+  /* TARGET CONFIRMATION */
+  .confirm-wrap{
+    max-width:900px;
+    margin:0 auto;
+  }
+  .confirm-head{
+    margin-bottom:20px;
+  }
+  .confirm-title{
+    margin:0;
+    font-size:31px;
+    font-weight:830;
+    letter-spacing:-.03em;
+  }
+  .confirm-sub{
+    margin-top:8px;
+    color:#667085;
+    font-size:12px;
+    line-height:1.6;
+  }
+  .confirm-card{
+    border-radius:24px;
+    padding:22px;
+  }
+  .uncertainty-box{
+    padding:12px 13px;
+    border-radius:12px;
+    border-left:3px solid #d98b22;
+    background:#fffaf0;
+    color:#6b5a3a;
+    font-size:11px;
+    line-height:1.55;
+    margin-bottom:14px;
+  }
+  .candidate-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .candidate{
+    width:100%;
+    text-align:left;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    background:#fff;
+    padding:13px 14px;
+    transition:.15s;
+  }
+  .candidate:hover{
+    border-color:#c8d5f2;
+    background:#fbfdff;
+  }
+  .candidate.active{
+    border-color:#9eb7ef;
+    background:#f8fbff;
+    box-shadow:0 0 0 3px #eff6ff;
+  }
+  .candidate-type{
+    font-size:9px;
+    font-weight:850;
+    color:#98a2b3;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .candidate-name{
+    margin-top:4px;
+    font-size:12px;
+    font-weight:820;
+    color:#101828;
+  }
+  .candidate-source{
+    margin-top:4px;
+    font-size:10px;
+    color:#667085;
+    line-height:1.45;
+  }
+  .confirm-actions{
+    margin-top:16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .confirm-alt{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .inline-error{
+    display:none;
+    margin-top:10px;
+    padding:9px 10px;
+    border-radius:10px;
+    background:#fef2f2;
+    color:#991b1b;
+    font-size:10px;
+    line-height:1.5;
+  }
+  .inline-error.active{display:block}
+
+  @media(max-width:900px){
+    .dimension-grid{grid-template-columns:1fr}
+    .overview-lower{grid-template-columns:1fr}
+    .overview-head{flex-direction:column}
+  }
+
+  @media(max-width:980px){
+    .grid{grid-template-columns:1fr}
+    .ai-status{display:none}
+    .manual-grid{grid-template-columns:1fr}
+    .env-grid{grid-template-columns:repeat(2,1fr)}
+    .auth-grid{grid-template-columns:1fr}
+  }
+
+  @media(max-width:680px){
+    .workspace{padding:24px 16px 54px}
+    .topbar{padding:0 16px}
+    h1{font-size:31px}
+    .mode-grid,.target-row{grid-template-columns:1fr}
+    .target-row select{border-right:0;border-bottom:1px solid var(--line)}
+    .env-grid{grid-template-columns:1fr 1fr}
+    .top-actions .top-chip:first-child{display:none}
+    .actions,.auth-actions{align-items:stretch;flex-direction:column}
+    .alt{width:100%}
+    .btn.primary{justify-content:center;width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-orb">RO</div>
+      <div>ResearchOps</div>
+    </div>
+    </header>
+
+  <main class="workspace">
+    <!-- SCREEN 01A -->
+    <section id="screen-setup" class="screen active">
+      <div class="hero simple-hero">
+        <div class="hero-copy">
+          <h1>What are you trying to reproduce?</h1>
+          <p class="lead">Provide your goal, one reliable target entry, and how you want to supply the environment information needed for this assessment.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="glass main-card">
+          <div class="main-inner">
+
+            <div class="section">
+              <div class="section-head">
+                <div class="step-icon">01</div>
+                <div>
+                  <div class="section-title">Reproduction goal</div>
+                  <div class="section-desc">What decision should this assessment help you make?</div>
+                </div>
+              </div>
+
+              <div class="input-shell field-focus">
+                <textarea aria-label="Reproduction goal">Decide whether it is worth starting the FGI reproduction now.</textarea>
+              </div>
+
+              <button id="context-toggle" class="context-toggle" type="button" aria-expanded="false">
+                <span id="context-toggle-icon">＋</span>
+                <span>Add context or constraints</span>
+                <span class="context-optional">Optional</span>
+              </button>
+
+              <div id="context-panel" class="context-panel">
+                <textarea
+                  class="context-textarea"
+                  aria-label="Additional context or constraints"
+                  placeholder="Anything else ResearchOps should consider?
+
+For example:
+- I only have 3 days.
+- Dataset access is not confirmed.
+- I already have the official checkpoint.
+- I only want to validate inference first."
+                ></textarea>
+                <div class="context-note">
+                  Environment facts such as GPU, CUDA, OS, and disk should still be provided through the environment section below.
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-head">
+                <div class="step-icon">02</div>
+                <div>
+                  <div class="section-title">Target</div>
+                  <div class="section-desc">Provide one reliable entry. ResearchOps can resolve related materials after you continue.</div>
+                </div>
+              </div>
+
+              <div class="input-shell target-row">
+                <select id="target-type" aria-label="Target type">
+                  <option value="repository">Repository</option>
+                  <option value="paper">Paper title</option>
+                  <option value="doi">DOI</option>
+                  <option value="arxiv">arXiv</option>
+                  <option value="project">Project page</option>
+                </select>
+                <input id="target-entry" value="https://github.com/aseuteurideu/FGI" />
+              </div>
+
+            </div>
+
+            <div class="section">
+              <div class="section-head">
+                <div class="step-icon">03</div>
+                <div>
+                  <div class="section-title">Reproduction environment</div>
+                  <div class="section-desc">Choose how ResearchOps should understand the environment you actually plan to use.</div>
+                </div>
+              </div>
+
+              <div class="mode-grid" id="mode-grid">
+                <button class="mode active" data-mode="readonly">
+                  <div class="mode-title">Read-only detection</div>
+                  <div class="mode-desc">Inspect agreed environment facts after read-only authorization.</div>
+                </button>
+
+                <button class="mode" data-mode="snapshot">
+                  <div class="mode-title">Snapshot</div>
+                  <div class="mode-desc">Upload an existing diagnostic or environment snapshot.</div>
+                </button>
+
+                <button class="mode" data-mode="manual">
+                  <div class="mode-title">Manual input</div>
+                  <div class="mode-desc">Paste or describe the environment facts you already know.</div>
+                </button>
+
+                <button class="mode" data-mode="later">
+                  <div class="mode-title">Not now</div>
+                  <div class="mode-desc">Continue without environment details.</div>
+                </button>
+              </div>
+
+              <div id="detail-readonly" class="readonly-info active">
+                <div class="readonly-info-icon">i</div>
+                <div>
+                  <div class="readonly-info-title">Authorization required</div>
+                  <div class="readonly-info-copy">No environment data is read until you approve read-only access.</div>
+                </div>
+              </div>
+
+              <div id="detail-snapshot" class="snapshot-panel">
+                <div class="snapshot-head">
+                  <div class="snapshot-icon">⇧</div>
+                  <div>
+                    <div class="snapshot-title">Environment snapshot</div>
+                  </div>
+                </div>
+
+                <label class="snapshot-drop" for="snapshot-file">
+                  <div>
+                    <div class="snapshot-drop-title">Choose snapshot file</div>
+                    <div class="snapshot-drop-copy">Supported formats are still being validated in this prototype.</div>
+                  </div>
+                  <div class="snapshot-choose">Choose file</div>
+                </label>
+
+                <input id="snapshot-file" class="file-input" type="file" />
+
+                <div id="snapshot-state" class="snapshot-file-state">
+                  <div class="snapshot-file-main">
+                    <div class="snapshot-file-icon">DOC</div>
+                    <div>
+                      <div id="snapshot-name" class="snapshot-file-name">environment_snapshot.txt</div>
+                      <div class="snapshot-file-meta">Selected for this assessment</div>
+                    </div>
+                  </div>
+                  <button id="remove-snapshot" class="snapshot-remove" type="button">Remove</button>
+                </div>
+              </div>
+
+              <div id="detail-manual" class="manual-ai-box">
+                <div class="manual-ai-head">
+                  <div>
+                    <div class="manual-ai-title">Describe your environment</div>
+                    <div class="manual-ai-desc">Paste or enter the environment facts you already know.</div>
+                  </div>
+                </div>
+
+                <textarea class="manual-textarea" placeholder="Example:
+GPU: RTX 2080 Ti ×3, 11 GB VRAM each
+OS: Ubuntu 18.04.6 LTS
+Python / Framework: unknown
+CUDA / Driver: unknown
+Available disk: 367 GB"></textarea>
+
+
+                <div class="manual-note">
+                  <span>✦</span>
+                  <span>Unknown values are allowed.</span>
+                </div>
+              </div>
+
+              <div id="setup-error" class="inline-error"></div>
+              <div class="actions actions-right">
+                <button id="continue-btn" class="btn primary">Continue to authorization <span>→</span></button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <aside class="side-stack">
+          <div class="glass side-card">
+            <div class="side-title">What you’ll get</div>
+            <div class="capability-list compact-list">
+              <div class="cap"><div class="cap-icon good">✓</div><div>Structured readiness status</div></div>
+              <div class="cap"><div class="cap-icon good">✓</div><div>Findings linked to inspectable evidence</div></div>
+              <div class="cap"><div class="cap-icon good">✓</div><div>An Overall Gate and first Next Action</div></div>
+            </div>
+          </div>
+
+          <div class="safety-compact">
+            <div class="safety-lock">🔒</div>
+            <div>
+              <div class="safety-title">Read-only decision support</div>
+              <div class="safety-copy">No installs, environment changes, file writes, or training execution.</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+
+
+    <div id="skip-confirm-backdrop" class="skip-confirm-backdrop" aria-hidden="true">
+      <div class="skip-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="skip-confirm-title">
+        <div class="skip-confirm-kicker">Target confirmation</div>
+        <div id="skip-confirm-title" class="skip-confirm-title">Continue without confirming?</div>
+        <div class="skip-confirm-copy">
+          ResearchOps will continue using the currently available target mapping without confirming which candidate is the intended target.
+        </div>
+        <div class="skip-confirm-warning">
+          This may produce a partially constrained assessment because some findings or evidence could be associated with the wrong target material.
+        </div>
+        <div class="skip-confirm-actions">
+          <button id="skip-confirm-cancel" class="ghost" type="button">Go back</button>
+          <button id="skip-confirm-proceed" class="btn primary" type="button">Confirm and continue <span>→</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARGET CONFIRMATION — supporting view -->
+    <section id="screen-target-confirm" class="screen">
+      <div class="confirm-wrap">
+        <div class="confirm-head">
+          <h1 class="confirm-title">Confirm the target</h1>
+          <div class="confirm-sub">ResearchOps found more than one plausible match for the entry you provided.</div>
+        </div>
+
+        <div class="glass confirm-card">
+          <div class="uncertainty-box">
+            The title alone is not specific enough to identify one target with confidence. Choose the intended match, add a more specific entry, or defer confirmation.
+          </div>
+
+          <div class="candidate-list">
+            <button id="candidate-a" class="candidate active" type="button">
+              <div class="candidate-type">Candidate A · Paper</div>
+              <div id="candidate-a-name" class="candidate-name">Provided paper title</div>
+              <div class="candidate-source">Primary match from the submitted title.</div>
+            </button>
+
+            <button id="candidate-b" class="candidate" type="button">
+              <div class="candidate-type">Candidate B · Related project</div>
+              <div id="candidate-b-name" class="candidate-name">Related project / repository match</div>
+              <div class="candidate-source">A related material with a similar title or project identity.</div>
+            </button>
+          </div>
+
+          <div class="confirm-actions">
+            <div class="confirm-alt">
+              <button id="target-supplement" class="ghost" type="button">Supplement entry</button>
+              <button id="target-defer" class="ghost" type="button">Continue without confirming</button>
+            </div>
+            <button id="target-confirm-btn" class="btn primary" type="button">Confirm selected target <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TARGET IDENTIFIED — supporting state -->
+    <section id="screen-target-identified" class="screen">
+      <div class="identified-wrap">
+        <div class="identified-card">
+          <div class="identified-head">
+            <div>
+              <div class="identified-kicker">Target resolution</div>
+              <h1 class="identified-title">Target identified</h1>
+            </div>
+            <div class="identified-state">Identified</div>
+          </div>
+
+          <div class="identified-copy">
+            ResearchOps resolved the submitted entry into a target that can be used for the readiness assessment.
+          </div>
+
+          <div class="identified-meta">
+            <div class="identified-row">
+              <div class="identified-label">Target</div>
+              <div id="identified-target-name" class="identified-value"></div>
+            </div>
+            <div class="identified-row">
+              <div class="identified-label">Resolved as</div>
+              <div id="identified-target-type" class="identified-value"></div>
+            </div>
+            <div class="identified-row">
+              <div class="identified-label">Source entry</div>
+              <div id="identified-source-entry" class="identified-value"></div>
+            </div>
+            <div class="identified-row">
+              <div class="identified-label">Materials summary</div>
+              <div id="identified-materials-summary" class="identified-value"></div>
+            </div>
+          </div>
+
+          <div class="identified-actions">
+            <button id="identified-back" class="ghost" type="button">← Back to Task Setup</button>
+            <button id="identified-continue" class="btn primary" type="button">Continue <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 01B -->
+    <section id="screen-auth" class="screen">
+      <div class="auth-wrap">
+        <div class="auth-page-head">
+          <h1>Review read-only access</h1>
+          <p class="lead">Confirm what ResearchOps may inspect before it reads any environment information.</p>
+        </div>
+
+        <div class="glass auth-card">
+          <div class="auth-mode-row">
+            <div class="readonly-tag">Read-only detection</div>
+            <div class="auth-mode-copy">Environment acquisition mode</div>
+          </div>
+
+          <div class="auth-grid">
+            <div class="scope-card">
+              <h3>ResearchOps can inspect</h3>
+              <div class="scope-line"><div class="cap-icon good">✓</div><div>OS / Python / Framework</div></div>
+              <div class="scope-line"><div class="cap-icon good">✓</div><div>CUDA / Driver</div></div>
+              <div class="scope-line"><div class="cap-icon good">✓</div><div>GPU / VRAM</div></div>
+              <div class="scope-line"><div class="cap-icon good">✓</div><div>Available disk</div></div>
+            </div>
+
+            <div class="scope-card">
+              <h3>ResearchOps will not</h3>
+              <div class="scope-line"><div class="cap-icon no">×</div><div>Install packages</div></div>
+              <div class="scope-line"><div class="cap-icon no">×</div><div>Modify environment</div></div>
+              <div class="scope-line"><div class="cap-icon no">×</div><div>Write / delete / overwrite files</div></div>
+              <div class="scope-line"><div class="cap-icon no">×</div><div>Start training or reproduction</div></div>
+            </div>
+          </div>
+
+          <div class="auth-fallback-note">
+            Prefer not to authorize direct inspection? Use Snapshot or Manual Input instead.
+          </div>
+
+          <div class="auth-actions">
+            <div class="alt">
+              <button id="back-btn" class="ghost">← Back</button>
+              <button id="auth-use-snapshot" class="ghost" type="button">Use snapshot instead</button>
+              <button id="auth-use-manual" class="ghost" type="button">Manual input</button>
+              <button id="auth-no-environment" class="ghost" type="button">Continue without environment data</button>
+            </div>
+            <div class="auth-decision">
+              <button id="deny-authorize-btn" class="ghost" type="button">Don't authorize</button>
+              <button id="authorize-btn" class="btn primary">Authorize read-only access <span>→</span></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- AUTHORIZATION DENIED — supporting state -->
+    <section id="screen-auth-denied" class="screen">
+      <div class="auth-denied-wrap">
+        <div class="auth-denied-card">
+          <div class="auth-denied-head">
+            <div>
+              <div class="auth-denied-kicker">Environment access</div>
+              <h1 class="auth-denied-title">Read-only access not authorized</h1>
+            </div>
+            <div class="auth-denied-state">Authorization Denied</div>
+          </div>
+
+          <div class="auth-denied-copy">
+            ResearchOps did not read any environment information. You can provide the same context through another supported input path.
+          </div>
+
+          <div class="auth-denied-boundary">
+            Authorization Denied is not Environment Blocked and does not directly assign RD-02 a Blocked status.
+          </div>
+
+          <div class="auth-denied-actions">
+            <button id="auth-denied-review" class="ghost" type="button">← Review access again</button>
+            <div class="auth-denied-alt">
+              <button id="auth-denied-snapshot" class="ghost" type="button">Use snapshot instead</button>
+              <button id="auth-denied-manual" class="ghost" type="button">Manual input</button>
+              <button id="auth-denied-no-env" class="btn primary" type="button">Continue without environment data <span>→</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESSING -->
+    <section id="screen-processing" class="screen">
+      <div class="processing-wrap">
+        <div class="glass processing-card">
+          <div class="processing-icon">✦</div>
+          <div class="processing-title">Building your readiness assessment</div>
+          <div id="processing-copy" class="processing-copy">ResearchOps is combining the available environment context with the target materials needed for this assessment.</div>
+
+          <div class="processing-list">
+            <div class="processing-row">
+              <div class="processing-row-left"><div class="spinner"></div><div id="processing-env-label">Acquiring environment context</div></div>
+              <div id="processing-env-state" class="processing-state">Processing</div>
+            </div>
+            <div class="processing-row">
+              <div class="processing-row-left"><div class="spinner"></div><div>Reviewing linked target materials</div></div>
+              <div class="processing-state">Processing</div>
+            </div>
+            <div class="processing-row">
+              <div class="processing-row-left"><div class="spinner"></div><div>Building readiness findings and Gate</div></div>
+              <div class="processing-state">Processing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PARTIAL RESULT — state variant, not a new core page -->
+    <section id="screen-partial-result" class="screen">
+      <div class="partial-wrap">
+        <div class="partial-card">
+          <div class="partial-head">
+            <div>
+              <div class="partial-kicker">Acquisition state</div>
+              <h1 class="partial-title">Partial result available</h1>
+            </div>
+            <div class="partial-state">Partial Result</div>
+          </div>
+
+          <div class="partial-copy">
+            Some assessment inputs are available, while one acquisition step is still incomplete. ResearchOps has not converted the incomplete acquisition into a readiness Warning, Unknown, or Blocked status.
+          </div>
+
+          <div class="partial-note">
+            This is a processing / acquisition state, not a business readiness status.
+          </div>
+
+          <div class="partial-progress">
+            <div class="partial-row">
+              <div>
+                <div class="partial-row-title">Target materials</div>
+                <div class="partial-row-copy">Primary target and linked materials currently available to the assessment.</div>
+              </div>
+              <div class="partial-row-state available">Available</div>
+            </div>
+
+            <div class="partial-row">
+              <div>
+                <div class="partial-row-title">Environment context</div>
+                <div class="partial-row-copy">Environment facts currently available from the selected input path.</div>
+              </div>
+              <div class="partial-row-state available">Available</div>
+            </div>
+
+            <div class="partial-row">
+              <div>
+                <div class="partial-row-title">Additional material review</div>
+                <div class="partial-row-copy">One linked material review has not finished yet.</div>
+              </div>
+              <div class="partial-row-state processing">Still processing</div>
+            </div>
+          </div>
+
+          <div class="partial-actions">
+            <button id="partial-back-setup" class="ghost" type="button">← Back to Task Setup</button>
+            <button id="partial-continue" class="btn primary" type="button">Continue processing</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ACQUISITION FAILURE — state variant, not a new core page -->
+    <section id="screen-acquisition-failure" class="screen">
+      <div class="failure-wrap">
+        <div class="failure-card">
+          <div class="failure-head">
+            <div>
+              <div class="failure-kicker">Acquisition state</div>
+              <h1 class="failure-title">Environment acquisition failed</h1>
+            </div>
+            <div class="failure-state">Acquisition Failure</div>
+          </div>
+
+          <div class="failure-copy">
+            ResearchOps could not complete the selected environment acquisition step. No readiness status has been assigned from this technical failure.
+          </div>
+
+          <div class="failure-boundary">
+            Acquisition Failure is not Environment Blocked and does not by itself produce Warning, Blocked, or PAUSE.
+          </div>
+
+          <div class="failure-detail">
+            <div class="failure-detail-label">What failed</div>
+            <div class="failure-detail-title">Read-only environment acquisition</div>
+            <div class="failure-detail-copy">
+              The requested environment facts could not be retrieved. You can retry the same path or provide the environment through another supported input mode.
+            </div>
+          </div>
+
+          <div class="failure-actions">
+            <div class="failure-alt">
+              <button id="failure-snapshot" class="ghost" type="button">Use snapshot instead</button>
+              <button id="failure-manual" class="ghost" type="button">Manual input</button>
+            </div>
+            <button id="failure-retry" class="btn primary" type="button">Retry <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CONFLICT — state variant, not a new core page -->
+    <section id="screen-conflict" class="screen">
+      <div class="conflict-wrap">
+        <div class="conflict-card">
+          <div class="conflict-head">
+            <div>
+              <div class="conflict-kicker">Acquisition state</div>
+              <h1 class="conflict-title">Conflicting evidence found</h1>
+            </div>
+            <div class="conflict-state">Conflict</div>
+          </div>
+
+          <div class="conflict-copy">
+            ResearchOps found two available sources that support different interpretations of the same setup condition.
+          </div>
+
+          <div class="conflict-boundary">
+            Conflict is an acquisition / analysis state. It is not itself a Readiness Warning, Unknown, Blocked, or PAUSE decision.
+          </div>
+
+          <div class="conflict-sources">
+            <div class="conflict-source">
+              <div class="conflict-source-label">Source A</div>
+              <div class="conflict-source-title">Paper setup description</div>
+              <div class="conflict-source-value">
+                The published setup describes one environment or evaluation configuration.
+              </div>
+              <div class="conflict-source-meta">Material · Paper</div>
+            </div>
+
+            <div class="conflict-source">
+              <div class="conflict-source-label">Source B</div>
+              <div class="conflict-source-title">Repository setup description</div>
+              <div class="conflict-source-value">
+                The repository material indicates a different environment or evaluation configuration.
+              </div>
+              <div class="conflict-source-meta">Material · Repository</div>
+            </div>
+          </div>
+
+          <div class="conflict-rule">
+            Both sources remain visible. ResearchOps does not silently choose one source or collapse the disagreement into a single conclusion.
+          </div>
+
+          <div class="conflict-actions">
+            <div class="conflict-alt">
+              <button id="conflict-back-setup" class="ghost" type="button">← Back to Task Setup</button>
+            </div>
+            <button id="conflict-review" class="btn primary" type="button">Review available evidence <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- GATE NOT AVAILABLE YET — state variant, not a fourth Gate -->
+    <section id="screen-gate-not-available" class="screen">
+      <div class="gate-na-wrap">
+        <div class="gate-na-card">
+          <div class="gate-na-head">
+            <div>
+              <div class="gate-na-kicker">Overall Gate</div>
+              <h1 class="gate-na-title">Not Available Yet</h1>
+            </div>
+            <div class="gate-na-state">Gate unavailable</div>
+          </div>
+
+          <div class="gate-na-copy">
+            ResearchOps does not yet have enough completed readiness findings to reliably aggregate an Overall Gate.
+          </div>
+
+          <div class="gate-na-boundary">
+            “Not Available Yet” is not a fourth Gate value and must not be interpreted as Gate = Unknown.
+          </div>
+
+          <div class="gate-na-list">
+            <div class="gate-na-row">
+              <div>
+                <div class="gate-na-row-title">RD-01 · Data & Access Readiness</div>
+                <div class="gate-na-row-copy">A usable dimension result is already available.</div>
+              </div>
+              <div class="gate-na-row-state available">Available</div>
+            </div>
+
+            <div class="gate-na-row">
+              <div>
+                <div class="gate-na-row-title">RD-02 · Environment & Dependency Readiness</div>
+                <div class="gate-na-row-copy">Required acquisition / analysis is not complete yet.</div>
+              </div>
+              <div class="gate-na-row-state">Still processing</div>
+            </div>
+
+            <div class="gate-na-row">
+              <div>
+                <div class="gate-na-row-title">RD-03 · Weights & Configuration Readiness</div>
+                <div class="gate-na-row-copy">A usable dimension result is already available.</div>
+              </div>
+              <div class="gate-na-row-state available">Available</div>
+            </div>
+          </div>
+
+          <div class="gate-na-actions">
+            <button id="gate-na-back-setup" class="ghost" type="button">← Back to Task Setup</button>
+            <button id="gate-na-continue" class="btn primary" type="button">Continue processing <span>→</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- BLOCKED / PAUSE — Gate result variant -->
+    <section id="screen-pause" class="screen">
+      <div class="pause-wrap">
+        <div class="pause-head">
+          <h1 class="pause-title">Readiness Overview</h1>
+          <button id="pause-back-setup" class="ghost pause-back" type="button">← Back to Task Setup</button>
+        </div>
+
+        <div class="pause-gate">
+          <div class="pause-gate-top">
+            <div>
+              <div class="pause-label">Overall Gate</div>
+              <div class="pause-value">PAUSE</div>
+            </div>
+            <div class="pause-chip">Blocking evidence found</div>
+          </div>
+
+          <div class="pause-reason">
+            <div class="pause-reason-label">Reason</div>
+            <div class="pause-reason-text">A required data-access condition is explicitly unavailable under the current reproduction path.</div>
+          </div>
+        </div>
+
+        <div class="dimension-grid">
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-01</div>
+                <div class="dimension-name">Data & Access Readiness</div>
+              </div>
+              <div class="status-chip status-blocked">Blocked</div>
+            </div>
+            <div class="dimension-copy">Explicit negative evidence shows the required dataset access is unavailable for the current reproduction path.</div>
+            <div class="dimension-impact">Gate impact · Triggers PAUSE</div>
+            <button id="pause-rd01-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-02</div>
+                <div class="dimension-name">Environment & Dependency Readiness</div>
+              </div>
+              <div class="status-chip status-warning">Warning</div>
+            </div>
+            <div class="dimension-copy">A compatibility risk is known, but current evidence does not establish a hard environment blocker.</div>
+            <div class="dimension-impact">Gate impact · Non-blocking risk</div>
+            <button id="pause-rd02-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-03</div>
+                <div class="dimension-name">Weights & Configuration Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">Required checkpoint and configuration relationships are sufficiently identified for the current assessment.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="pause-rd03-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+        </div>
+
+        <div class="pause-lower">
+          <div class="pause-blocker">
+            <div class="pause-section-label">Key Blocker</div>
+            <div class="pause-section-title">Required dataset access is not available</div>
+            <div class="pause-section-copy">This is a confirmed blocking condition, not a missing-information Unknown.</div>
+            <div class="pause-evidence">
+              Blocking evidence · The required access condition has an explicit negative result for the current reproduction path.
+            </div>
+          </div>
+
+          <div class="pause-action">
+            <div class="pause-section-label">First Next Action</div>
+            <div class="pause-section-title">Resolve or replace the blocked access path</div>
+            <div class="pause-section-copy">Confirm an alternative permitted data path or otherwise resolve the explicit access blocker before higher-cost reproduction work.</div>
+            <div class="pause-action-type">Action type · Resolve Blocker</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- READY / PROCEED — Gate result variant -->
+    <section id="screen-proceed" class="screen">
+      <div class="proceed-wrap">
+        <div class="proceed-head">
+          <h1 class="proceed-title">Readiness Overview</h1>
+          <button id="proceed-back-setup" class="ghost" type="button">← Back to Task Setup</button>
+        </div>
+
+        <div class="proceed-gate">
+          <div class="proceed-gate-top">
+            <div>
+              <div class="proceed-label">Overall Gate</div>
+              <div class="proceed-value">PROCEED</div>
+            </div>
+            <div class="proceed-chip">Ready to continue</div>
+          </div>
+
+          <div class="proceed-reason">
+            <div class="proceed-reason-label">Reason</div>
+            <div class="proceed-reason-text">All three core readiness dimensions are supported by sufficient positive evidence, with no material resource or priority evaluation conflict affecting the current path.</div>
+          </div>
+        </div>
+
+        <div class="dimension-grid">
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-01</div>
+                <div class="dimension-name">Data & Access Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">Required data and access conditions are sufficiently supported for the current validation path.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="proceed-rd01-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-02</div>
+                <div class="dimension-name">Environment & Dependency Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">The available environment facts are sufficiently aligned with the documented dependency requirements for the current validation path.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="proceed-rd02-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-03</div>
+                <div class="dimension-name">Weights & Configuration Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">Required checkpoint and configuration relationships are sufficiently identified for the intended validation path.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="proceed-rd03-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+        </div>
+
+        <div class="proceed-lower">
+          <div class="proceed-summary">
+            <div class="proceed-section-label">Readiness Summary</div>
+            <div class="proceed-section-title">No current gate-critical blocker or unresolved core readiness gap</div>
+            <div class="proceed-section-copy">Positive evidence remains inspectable even when the current status is Ready.</div>
+            <div class="proceed-signal">Additional Signals · No material resource constraint or priority evaluation conflict currently changes the Gate.</div>
+          </div>
+
+          <div class="proceed-action">
+            <div class="proceed-section-label">First Next Action</div>
+            <div class="proceed-section-title">Run the minimum validation before higher-cost reproduction work</div>
+            <div class="proceed-section-copy">Continue with the smallest reasonable validation step before committing to a more expensive reproduction path.</div>
+            <div class="proceed-action-type">Action type · Minimum Validation</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 02 -->
+    <section id="screen-overview" class="screen">
+      <div class="overview-wrap">
+        <div class="overview-head">
+          <div>
+            <h1 class="overview-title">Readiness Overview</h1>
+          </div>
+          <button id="overview-back-btn" class="ghost overview-back" type="button">← Back to Task Setup</button>
+        </div>
+
+        <div class="gate-card">
+          <div class="gate-top">
+            <div>
+              <div class="gate-label">Overall Gate</div>
+              <div class="gate-value">CONDITIONAL PROCEED</div>
+            </div>
+          </div>
+
+          <div class="gate-reason">
+            <div class="gate-reason-label">Reason</div>
+            <div class="gate-reason-text">Dataset access permission is not confirmed.</div>
+          </div>
+        </div>
+
+        <div class="dimension-grid">
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-01</div>
+                <div class="dimension-name">Data & Access Readiness</div>
+              </div>
+              <div class="status-chip status-unknown">Unknown</div>
+            </div>
+            <div class="dimension-copy">A gate-critical dataset access condition is still unresolved.</div>
+            <div class="dimension-impact">Gate impact · Prevents full PROCEED</div>
+            <button id="rd01-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-02</div>
+                <div class="dimension-name">Environment & Dependency Readiness</div>
+              </div>
+              <div id="rd02-status" class="status-chip status-warning">Warning</div>
+            </div>
+            <div id="rd02-copy" class="dimension-copy">The environment is usable for assessment, with a known compatibility risk that needs validation.</div>
+            <div id="rd02-impact" class="dimension-impact">Gate impact · Non-blocking risk</div>
+            <button id="rd02-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+
+          <div class="dimension-card">
+            <div class="dimension-head">
+              <div>
+                <div class="dimension-id">RD-03</div>
+                <div class="dimension-name">Weights & Configuration Readiness</div>
+              </div>
+              <div class="status-chip status-ready">Ready</div>
+            </div>
+            <div class="dimension-copy">Required checkpoint and configuration relationships are sufficiently identified for the current assessment.</div>
+            <div class="dimension-impact">Gate impact · No current blocker</div>
+            <button id="rd03-view-details" class="dimension-action" type="button">View details →</button>
+          </div>
+        </div>
+
+        <div class="overview-lower">
+          <div class="focus-card">
+            <div class="focus-kicker">Key issue</div>
+            <div class="focus-title">Dataset access permission is not confirmed</div>
+            <div class="focus-copy">This unresolved condition is currently preventing a full PROCEED decision.</div>
+            <div class="focus-meta">
+              <div class="meta-chip">Gate-critical Unknown</div>
+            </div>
+          </div>
+
+          <div class="next-action-card">
+            <div class="next-action-priority">First Next Action</div>
+            <div class="next-action-title">Confirm whether dataset access can be obtained</div>
+            <div class="next-action-copy">Verify access before moving to higher-cost reproduction work.</div>
+            <div class="next-action-type">Action type · Resolve Gate-critical Unknown</div>
+          </div>
+        </div>
+
+        <div class="signals-section">
+          <div class="signals-section-head">
+            <div class="signals-title">Additional signals</div>
+            <div class="signals-note">Supporting context, not core Dimensions</div>
+          </div>
+
+          <div class="signal-grid">
+            <div class="signal-card">
+              <div class="signal-card-head">
+                <div class="signal-name">Resource Constraint</div>
+                <div class="signal-status unknown">Unknown</div>
+              </div>
+              <div class="signal-summary">Available resource facts are known, but the project’s explicit minimum requirements are not fully confirmed.</div>
+              <button id="resource-signal-btn" class="signal-detail-btn" type="button">View details →</button>
+            </div>
+
+            <div class="signal-card">
+              <div class="signal-card-head">
+                <div class="signal-name">Evaluation Conflict</div>
+                <div class="signal-status warning">Warning</div>
+              </div>
+              <div class="signal-summary">A paper-code evaluation setting difference may affect result comparability.</div>
+              <button id="evaluation-signal-btn" class="signal-detail-btn" type="button">View details →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+
+    <!-- SCREEN 03 — DIMENSION DETAIL -->
+    <section id="screen-dimension-detail" class="screen">
+      <div class="dimension-detail-wrap">
+        <div class="dimension-detail-head">
+          <div>
+            <div id="detail-dimension-id" class="dimension-detail-kicker">RD-01</div>
+            <h1 id="detail-dimension-name" class="dimension-detail-title">Data & Access Readiness</h1>
+          </div>
+          <button id="dimension-back-btn" class="ghost" type="button">← Back to Overview</button>
+        </div>
+
+        <div class="dimension-summary-card">
+          <div class="dimension-status-line">
+            <div id="detail-status" class="status-chip status-unknown">Unknown</div>
+            <div id="detail-status-copy" class="dimension-status-copy">Dataset access cannot be confirmed with the evidence currently available.</div>
+          </div>
+
+          <div class="dimension-gate-impact">
+            <div class="impact-title">Gate Impact</div>
+            <div id="detail-gate-impact" class="impact-copy">Prevents full PROCEED until the access condition is resolved.</div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Key Finding</div>
+
+          <div class="finding-card">
+            <div class="finding-top">
+              <div>
+                <div id="detail-finding-condition" class="finding-condition">Condition · Dataset access</div>
+                <div id="detail-finding-title" class="finding-title">Dataset access permission is not confirmed</div>
+              </div>
+            </div>
+
+            <div id="detail-finding-summary" class="finding-summary">Available sources do not establish whether the required dataset can be accessed under the user’s actual reproduction conditions.</div>
+
+            <div class="finding-tags">
+              <div id="detail-finding-type" class="finding-tag">Finding type · Unknown</div>
+              <div id="detail-critical-tag" class="finding-tag critical">Gate-critical</div>
+              <div id="detail-evidence-tag" class="finding-tag">Evidence · Available</div>
+            </div>
+
+            <div class="finding-bottom">
+              <div id="detail-finding-impact" class="finding-impact">Gate impact · Prevents full PROCEED</div>
+              <div class="finding-actions">
+                <button id="dimension-feedback-btn" class="finding-action muted-action" type="button">Give feedback</button>
+                <button id="dimension-view-evidence" class="finding-action" type="button">View evidence →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">Related Next Action</div>
+
+          <div class="related-action-card">
+            <div id="detail-next-action-title" class="related-action-title">Confirm whether dataset access can be obtained</div>
+            <div id="detail-next-action-type" class="related-action-type">Resolve Gate-critical Unknown</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <div id="evidence-backdrop" class="evidence-backdrop"></div>
+    <aside id="evidence-drawer" class="evidence-drawer" aria-hidden="true">
+      <div class="evidence-head">
+        <div>
+          <div class="evidence-kicker">Evidence Detail</div>
+          <div id="evidence-title" class="evidence-title">Supporting evidence</div>
+        </div>
+        <button id="evidence-close" class="evidence-close" type="button">Close</button>
+      </div>
+
+      <div class="verification-row">
+        <div class="verification-label">Verification status</div>
+        <div id="evidence-verification" class="verification-chip">Located Only</div>
+      </div>
+
+      <div class="evidence-section">
+        <div class="evidence-label">Evidence Summary</div>
+        <div id="evidence-summary" class="evidence-value"></div>
+      </div>
+
+      <div class="evidence-section">
+        <div class="evidence-label">Source</div>
+        <div id="evidence-source" class="evidence-value"></div>
+
+        <div class="source-meta">
+          <div class="source-meta-item">
+            <div class="source-meta-label">Location</div>
+            <div id="evidence-location" class="source-meta-value"></div>
+          </div>
+          <div class="source-meta-item">
+            <div class="source-meta-label">Material Type</div>
+            <div id="evidence-material-type" class="source-meta-value"></div>
+          </div>
+        </div>
+
+        <div id="evidence-conflict" class="conflict-box"></div>
+
+        <div id="evidence-conflict-compare" class="evidence-conflict-compare">
+          <div class="evidence-conflict-source">
+            <div class="evidence-conflict-source-label">Source A</div>
+            <div id="evidence-conflict-a-title" class="evidence-conflict-source-title"></div>
+            <div id="evidence-conflict-a-copy" class="evidence-conflict-source-copy"></div>
+          </div>
+          <div class="evidence-conflict-source">
+            <div class="evidence-conflict-source-label">Source B</div>
+            <div id="evidence-conflict-b-title" class="evidence-conflict-source-title"></div>
+            <div id="evidence-conflict-b-copy" class="evidence-conflict-source-copy"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="evidence-actions">
+        <button id="evidence-feedback-btn" class="evidence-feedback-btn" type="button">Feedback on evidence</button>
+        <button id="evidence-open-source" class="open-source-btn" type="button">Open source ↗</button>
+      </div>
+    </aside>
+
+    <div id="feedback-backdrop" class="feedback-backdrop"></div>
+    <aside id="feedback-panel" class="feedback-panel" aria-hidden="true">
+      <div class="feedback-head">
+        <div>
+          <div id="feedback-kicker" class="feedback-kicker">Finding feedback</div>
+          <div id="feedback-context-title" class="feedback-title">Give feedback</div>
+        </div>
+        <button id="feedback-close" class="feedback-close" type="button">Close</button>
+      </div>
+
+      <div id="feedback-copy" class="feedback-copy">Feedback applies to this Finding and its evidence. It does not directly edit the Dimension status or Overall Gate.</div>
+
+      <div class="feedback-options">
+        <button class="feedback-option" data-feedback="confirm" type="button">Confirm</button>
+        <button class="feedback-option" data-feedback="question" type="button">Question</button>
+        <button class="feedback-option" data-feedback="correct" type="button">Correct</button>
+        <button class="feedback-option" data-feedback="evidence" type="button">Add Evidence</button>
+      </div>
+
+      <div id="feedback-input-wrap" class="feedback-input-wrap">
+        <textarea id="feedback-textarea" class="feedback-textarea" placeholder="Describe what should be questioned, corrected, or added..."></textarea>
+      </div>
+
+      <div class="feedback-note">If this feedback changes the underlying Finding, ResearchOps may reassess the related Dimension and Gate.</div>
+
+      <div id="feedback-error" class="feedback-error"></div>
+      <button id="feedback-submit" class="btn primary feedback-submit" type="button">Submit feedback</button>
+      <div id="feedback-success" class="feedback-success">Feedback recorded for this Finding.</div>
+    </aside>
+
+    <div id="signal-backdrop" class="drawer-backdrop"></div>
+
+    <aside id="signal-drawer" class="signal-drawer" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <div id="drawer-kicker" class="drawer-kicker">Additional Signal</div>
+          <div id="drawer-title" class="drawer-title">Signal details</div>
+        </div>
+        <button id="signal-drawer-close" class="drawer-close" type="button">Close</button>
+      </div>
+
+      <div id="resource-drawer-content">
+        <div class="drawer-section">
+          <div class="drawer-label">Status</div>
+          <div class="drawer-value">Unknown</div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Summary</div>
+          <div class="drawer-value">Current resource facts are available, but the repository does not provide enough explicit minimum requirements to make a reliable comparison.</div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Resource items</div>
+          <div class="resource-table">
+            <div class="resource-row header"><div>Resource</div><div>Current</div><div>Required</div></div>
+            <div class="resource-row"><div class="resource-type">GPU / VRAM</div><div>Known</div><div>Not confirmed</div></div>
+            <div class="resource-row"><div class="resource-type">Disk</div><div>Known</div><div>Not confirmed</div></div>
+            <div class="resource-row"><div class="resource-type">Time budget</div><div>Provided</div><div>Not explicitly stated</div></div>
+          </div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Gate impact</div>
+          <div class="drawer-value">This Unknown can contribute to CONDITIONAL PROCEED, but it does not justify Resource Blocked without an explicit minimum requirement and a confirmed shortfall.</div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Evidence</div>
+          <div class="drawer-value">Resource facts and requirement sources can be inspected when available.</div>
+          <button id="resource-evidence-link" class="drawer-link" type="button">View related evidence →</button>
+        </div>
+      </div>
+
+      <div id="evaluation-drawer-content" style="display:none">
+        <div class="drawer-section">
+          <div class="drawer-label">Status</div>
+          <div class="drawer-value">Warning</div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Conflict type</div>
+          <div class="drawer-value">Paper-Code Setting</div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Summary</div>
+          <div class="drawer-value">The paper and repository appear to use different evaluation settings. The difference is relevant to comparability but is not independently blocking the reproduction.</div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Gate impact</div>
+          <div class="drawer-value">Evaluation Warning may support CONDITIONAL PROCEED, but it does not independently produce a P0 Blocked state.</div>
+        </div>
+        <div class="drawer-section">
+          <div class="drawer-label">Evidence</div>
+          <div class="drawer-value">Conflicting sources should remain visible side by side rather than being silently resolved.</div>
+          <button id="evaluation-evidence-link" class="drawer-link" type="button">View related evidence →</button>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+</div>
+
+<script>
+  const signalDrawer = document.getElementById('signal-drawer');
+  const signalBackdrop = document.getElementById('signal-backdrop');
+  const signalDrawerClose = document.getElementById('signal-drawer-close');
+  const resourceSignalBtn = document.getElementById('resource-signal-btn');
+  const evaluationSignalBtn = document.getElementById('evaluation-signal-btn');
+  const resourceDrawerContent = document.getElementById('resource-drawer-content');
+  const evaluationDrawerContent = document.getElementById('evaluation-drawer-content');
+  const drawerTitle = document.getElementById('drawer-title');
+
+  function openSignalDrawer(type){
+    const resource = type === 'resource';
+    resourceDrawerContent.style.display = resource ? 'block' : 'none';
+    evaluationDrawerContent.style.display = resource ? 'none' : 'block';
+    drawerTitle.textContent = resource ? 'Resource Constraint' : 'Evaluation Conflict';
+    signalDrawer.classList.add('active');
+    signalBackdrop.classList.add('active');
+    signalDrawer.setAttribute('aria-hidden','false');
+  }
+
+  function closeSignalDrawer(){
+    signalDrawer.classList.remove('active');
+    signalBackdrop.classList.remove('active');
+    signalDrawer.setAttribute('aria-hidden','true');
+  }
+
+  resourceSignalBtn.addEventListener('click', () => openSignalDrawer('resource'));
+  evaluationSignalBtn.addEventListener('click', () => openSignalDrawer('evaluation'));
+  signalDrawerClose.addEventListener('click', closeSignalDrawer);
+  signalBackdrop.addEventListener('click', closeSignalDrawer);
+
+  const resourceEvidenceLink = document.getElementById('resource-evidence-link');
+  const evaluationEvidenceLink = document.getElementById('evaluation-evidence-link');
+
+  resourceEvidenceLink.addEventListener('click', openResourceEvidenceDrawer);
+  evaluationEvidenceLink.addEventListener('click', openConflictEvidenceDrawer);
+
+  const contextToggle = document.getElementById('context-toggle');
+  const contextPanel = document.getElementById('context-panel');
+  const contextToggleIcon = document.getElementById('context-toggle-icon');
+
+  contextToggle.addEventListener('click', () => {
+    const open = contextPanel.classList.toggle('active');
+    contextToggle.setAttribute('aria-expanded', String(open));
+    contextToggleIcon.textContent = open ? '−' : '＋';
+  });
+
+  const setup = document.getElementById('screen-setup');
+  const auth = document.getElementById('screen-auth');
+  const authDenied = document.getElementById('screen-auth-denied');
+  const targetConfirm = document.getElementById('screen-target-confirm');
+  const targetIdentified = document.getElementById('screen-target-identified');
+  const modes = [...document.querySelectorAll('.mode')];
+  const continueBtn = document.getElementById('continue-btn');
+  const backBtn = document.getElementById('back-btn');
+  let selectedMode = 'readonly';
+
+  const processing = document.getElementById('screen-processing');
+  const partialResult = document.getElementById('screen-partial-result');
+  const acquisitionFailure = document.getElementById('screen-acquisition-failure');
+  const conflictScreen = document.getElementById('screen-conflict');
+  const gateNotAvailable = document.getElementById('screen-gate-not-available');
+  const pauseScreen = document.getElementById('screen-pause');
+  const proceedScreen = document.getElementById('screen-proceed');
+  const overview = document.getElementById('screen-overview');
+  const dimensionDetail = document.getElementById('screen-dimension-detail');
+  const overviewBackBtn = document.getElementById('overview-back-btn');
+
+  function showScreen(type){
+    setup.classList.toggle('active', type === 'setup');
+    targetConfirm.classList.toggle('active', type === 'targetConfirm');
+    targetIdentified.classList.toggle('active', type === 'targetIdentified');
+    auth.classList.toggle('active', type === 'auth');
+    authDenied.classList.toggle('active', type === 'authDenied');
+    processing.classList.toggle('active', type === 'processing');
+    partialResult.classList.toggle('active', type === 'partialResult');
+    acquisitionFailure.classList.toggle('active', type === 'acquisitionFailure');
+    conflictScreen.classList.toggle('active', type === 'conflict');
+    gateNotAvailable.classList.toggle('active', type === 'gateNotAvailable');
+    pauseScreen.classList.toggle('active', type === 'pause');
+    proceedScreen.classList.toggle('active', type === 'proceed');
+    overview.classList.toggle('active', type === 'overview');
+    dimensionDetail.classList.toggle('active', type === 'dimensionDetail');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  const targetTypeEl = document.getElementById('target-type');
+  const targetEntryEl = document.getElementById('target-entry');
+  const setupError = document.getElementById('setup-error');
+  const processingCopy = document.getElementById('processing-copy');
+  const processingEnvLabel = document.getElementById('processing-env-label');
+  const processingEnvState = document.getElementById('processing-env-state');
+
+  let targetResolved = false;
+  let targetDeferred = false;
+  let targetResolvedName = '';
+  let targetResolvedTypeLabel = '';
+  let selectedTargetCandidate = 'a';
+
+  function showSetupError(message){
+    setupError.textContent = message;
+    setupError.classList.add('active');
+  }
+
+  function clearSetupError(){
+    setupError.textContent = '';
+    setupError.classList.remove('active');
+  }
+
+  function targetNeedsConfirmation(){
+    // Prototype branch used to demonstrate the conditional confirmation flow.
+    // Paper-title entries simulate a potentially ambiguous title match.
+    return targetTypeEl.value === 'paper' && !targetResolved && !targetDeferred;
+  }
+
+  function prepareTargetConfirmation(){
+    const entry = targetEntryEl.value.trim() || 'Provided paper title';
+    selectedTargetCandidate = 'a';
+    document.getElementById('candidate-a-name').textContent = entry;
+    document.getElementById('candidate-b-name').textContent = entry + ' — related project match';
+    candidateA.classList.add('active');
+    candidateB.classList.remove('active');
+    showScreen('targetConfirm');
+  }
+
+  const identifiedTargetName = document.getElementById('identified-target-name');
+  const identifiedTargetType = document.getElementById('identified-target-type');
+  const identifiedSourceEntry = document.getElementById('identified-source-entry');
+  const identifiedMaterialsSummary = document.getElementById('identified-materials-summary');
+  const identifiedBack = document.getElementById('identified-back');
+  const identifiedContinue = document.getElementById('identified-continue');
+
+  function getTargetDisplayName(){
+    const entry = targetEntryEl.value.trim();
+    if(targetTypeEl.value === 'repository'){
+      try{
+        const url = new URL(entry);
+        const cleanPath = url.pathname.replace(/^\/|\/$/g,'');
+        return cleanPath || entry;
+      }catch(e){
+        return entry;
+      }
+    }
+    return entry;
+  }
+
+  function prepareTargetIdentified(){
+    const typeLabel = targetResolvedTypeLabel || targetTypeEl.options[targetTypeEl.selectedIndex].textContent;
+    identifiedTargetName.textContent = targetResolvedName || getTargetDisplayName();
+    identifiedTargetType.textContent = typeLabel + ' · resolution status: Identified';
+    identifiedSourceEntry.textContent = targetEntryEl.value.trim();
+    identifiedMaterialsSummary.textContent =
+      'Primary target resolved from the submitted entry. Related public materials will be linked during the assessment when available.';
+    showScreen('targetIdentified');
+  }
+
+  identifiedBack.addEventListener('click', () => showScreen('setup'));
+  identifiedContinue.addEventListener('click', () => continueAfterTargetResolution());
+
+  function configureOverviewForEnvironment(){
+    const rd02Status = document.getElementById('rd02-status');
+    const rd02Copy = document.getElementById('rd02-copy');
+    const rd02Impact = document.getElementById('rd02-impact');
+
+    if(selectedMode === 'later'){
+      rd02Status.className = 'status-chip status-unknown';
+      rd02Status.textContent = 'Unknown';
+      rd02Copy.textContent = 'Environment information was not provided, so dependency readiness cannot be fully assessed.';
+      rd02Impact.textContent = 'Gate impact · Depends on unresolved environment evidence';
+    }else{
+      rd02Status.className = 'status-chip status-warning';
+      rd02Status.textContent = 'Warning';
+      rd02Copy.textContent = 'The environment is usable for assessment, with a known compatibility risk that needs validation.';
+      rd02Impact.textContent = 'Gate impact · Non-blocking risk';
+    }
+  }
+
+  const partialBackSetup = document.getElementById('partial-back-setup');
+  const partialContinue = document.getElementById('partial-continue');
+
+  partialBackSetup.addEventListener('click', () => {
+    history.replaceState(null, '', location.pathname);
+    showScreen('setup');
+  });
+
+  partialContinue.addEventListener('click', () => {
+    showScreen('processing');
+    setTimeout(() => showScreen('overview'), 1200);
+  });
+
+  const failureRetry = document.getElementById('failure-retry');
+  const failureSnapshot = document.getElementById('failure-snapshot');
+  const failureManual = document.getElementById('failure-manual');
+
+  failureRetry.addEventListener('click', () => {
+    selectedMode = 'readonly';
+    showScreen('processing');
+    processingCopy.textContent = 'ResearchOps is retrying read-only environment acquisition and rebuilding the assessment.';
+    processingEnvLabel.textContent = 'Retrying environment acquisition';
+    processingEnvState.textContent = 'Processing';
+    setTimeout(() => showScreen('overview'), 1200);
+  });
+
+  failureSnapshot.addEventListener('click', () => {
+    history.replaceState(null, '', location.pathname);
+    showScreen('setup');
+    selectEnvironmentMode('snapshot');
+    setTimeout(() => {
+      const panel = document.getElementById('detail-snapshot');
+      if(panel) panel.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 120);
+  });
+
+  failureManual.addEventListener('click', () => {
+    history.replaceState(null, '', location.pathname);
+    showScreen('setup');
+    selectEnvironmentMode('manual');
+    setTimeout(() => {
+      const panel = document.getElementById('detail-manual');
+      if(panel) panel.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 120);
+  });
+
+  const conflictBackSetup = document.getElementById('conflict-back-setup');
+  const conflictReview = document.getElementById('conflict-review');
+
+  conflictBackSetup.addEventListener('click', () => {
+    history.replaceState(null, '', location.pathname);
+    showScreen('setup');
+  });
+
+  conflictReview.addEventListener('click', () => {
+    openConflictEvidenceDrawer();
+  });
+
+  const gateNaBackSetup = document.getElementById('gate-na-back-setup');
+  const gateNaContinue = document.getElementById('gate-na-continue');
+
+  gateNaBackSetup.addEventListener('click', () => {
+    history.replaceState(null, '', location.pathname);
+    showScreen('setup');
+  });
+
+  gateNaContinue.addEventListener('click', () => {
+    history.replaceState(null, '', location.pathname);
+    showScreen('processing');
+    processingCopy.textContent = 'ResearchOps is completing the remaining readiness analysis before aggregating the Overall Gate.';
+    processingEnvLabel.textContent = 'Completing remaining readiness analysis';
+    processingEnvState.textContent = 'Processing';
+    setTimeout(() => showScreen('overview'), 1200);
+  });
+
+  const pauseBackSetup = document.getElementById('pause-back-setup');
+
+  pauseBackSetup.addEventListener('click', () => {
+    history.replaceState(null, '', location.pathname);
+    showScreen('setup');
+  });
+
+  const proceedBackSetup = document.getElementById('proceed-back-setup');
+
+  proceedBackSetup.addEventListener('click', () => {
+    history.replaceState(null, '', location.pathname);
+    showScreen('setup');
+  });
+
+  function startAssessmentProcessing(){
+    configureOverviewForEnvironment();
+
+    if(selectedMode === 'readonly'){
+      processingCopy.textContent = 'ResearchOps is combining the authorized environment facts with the resolved target materials.';
+      processingEnvLabel.textContent = 'Reading authorized environment facts';
+      processingEnvState.textContent = 'Processing';
+    }else if(selectedMode === 'snapshot'){
+      processingCopy.textContent = 'ResearchOps is combining the uploaded environment snapshot with the resolved target materials.';
+      processingEnvLabel.textContent = 'Reading uploaded environment snapshot';
+      processingEnvState.textContent = 'Processing';
+    }else if(selectedMode === 'manual'){
+      processingCopy.textContent = 'ResearchOps is structuring the environment facts you provided and combining them with the resolved target materials.';
+      processingEnvLabel.textContent = 'Structuring manual environment input';
+      processingEnvState.textContent = 'Processing';
+    }else{
+      processingCopy.textContent = 'ResearchOps is building the assessment from the available target materials. Environment information was not provided.';
+      processingEnvLabel.textContent = 'Environment information';
+      processingEnvState.textContent = 'Not provided';
+    }
+
+    showScreen('processing');
+    setTimeout(() => showScreen('overview'), 1400);
+  }
+
+  function continueAfterTargetResolution(){
+    if(selectedMode === 'readonly'){
+      showScreen('auth');
+    }else{
+      startAssessmentProcessing();
+    }
+  }
+
+  overviewBackBtn.addEventListener('click', () => {
+    showScreen('setup');
+  });
+
+  const dimensionFeedbackBtn = document.getElementById('dimension-feedback-btn');
+  const feedbackPanel = document.getElementById('feedback-panel');
+  const feedbackBackdrop = document.getElementById('feedback-backdrop');
+  const feedbackClose = document.getElementById('feedback-close');
+  const feedbackOptions = [...document.querySelectorAll('.feedback-option')];
+  const feedbackInputWrap = document.getElementById('feedback-input-wrap');
+  const feedbackTextarea = document.getElementById('feedback-textarea');
+  const feedbackSubmit = document.getElementById('feedback-submit');
+  const feedbackSuccess = document.getElementById('feedback-success');
+  const feedbackError = document.getElementById('feedback-error');
+  const feedbackKicker = document.getElementById('feedback-kicker');
+  const feedbackContextTitle = document.getElementById('feedback-context-title');
+  const feedbackCopy = document.getElementById('feedback-copy');
+
+  let selectedFeedbackType = null;
+  let feedbackContext = 'finding';
+
+  function openFeedbackPanel(context='finding'){
+    feedbackContext = context;
+    selectedFeedbackType = null;
+
+    if(context === 'evidence'){
+      feedbackKicker.textContent = 'Evidence feedback';
+      feedbackContextTitle.textContent = evidenceTitle.textContent;
+      feedbackCopy.textContent = 'Feedback applies to this Evidence. It does not directly edit the Finding, Dimension status, or Overall Gate.';
+    }else{
+      feedbackKicker.textContent = 'Finding feedback';
+      feedbackContextTitle.textContent = detailFindingTitle.textContent;
+      feedbackCopy.textContent = 'Feedback applies to this Finding and its evidence. It does not directly edit the Dimension status or Overall Gate.';
+    }
+
+    feedbackOptions.forEach(btn => btn.classList.remove('active'));
+    feedbackInputWrap.classList.remove('active');
+    feedbackTextarea.value = '';
+    feedbackSuccess.classList.remove('active');
+    feedbackError.classList.remove('active');
+    feedbackError.textContent = '';
+    feedbackSubmit.disabled = false;
+    feedbackSubmit.innerHTML = 'Submit feedback';
+    feedbackPanel.classList.add('active');
+    feedbackBackdrop.classList.add('active');
+    feedbackPanel.setAttribute('aria-hidden','false');
+  }
+
+  function closeFeedbackPanel(){
+    feedbackPanel.classList.remove('active');
+    feedbackBackdrop.classList.remove('active');
+    feedbackPanel.setAttribute('aria-hidden','true');
+  }
+
+  dimensionFeedbackBtn.addEventListener('click', () => openFeedbackPanel('finding'));
+  feedbackClose.addEventListener('click', closeFeedbackPanel);
+  feedbackBackdrop.addEventListener('click', closeFeedbackPanel);
+
+  feedbackOptions.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedFeedbackType = btn.dataset.feedback;
+      feedbackOptions.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const needsText = selectedFeedbackType !== 'confirm';
+      feedbackInputWrap.classList.toggle('active', needsText);
+      feedbackSuccess.classList.remove('active');
+      feedbackError.classList.remove('active');
+      feedbackError.textContent = '';
+      feedbackSubmit.disabled = false;
+      feedbackSubmit.innerHTML = 'Submit feedback';
+    });
+  });
+
+  feedbackSubmit.addEventListener('click', () => {
+    feedbackError.classList.remove('active');
+    feedbackError.textContent = '';
+    feedbackSuccess.classList.remove('active');
+
+    if(!selectedFeedbackType){
+      feedbackError.textContent = 'Choose a feedback type first.';
+      feedbackError.classList.add('active');
+      return;
+    }
+
+    if(selectedFeedbackType !== 'confirm' && !feedbackTextarea.value.trim()){
+      feedbackError.textContent = 'Add a short note before submitting this feedback.';
+      feedbackError.classList.add('active');
+      feedbackTextarea.focus();
+      return;
+    }
+
+    feedbackSubmit.disabled = true;
+    feedbackSubmit.innerHTML = 'Feedback submitted ✓';
+    feedbackSuccess.textContent = feedbackContext === 'evidence'
+      ? 'Feedback recorded for this Evidence.'
+      : 'Feedback recorded for this Finding.';
+    feedbackSuccess.classList.add('active');
+  });
+
+  const rd01ViewDetails = document.getElementById('rd01-view-details');
+  const rd02ViewDetails = document.getElementById('rd02-view-details');
+  const rd03ViewDetails = document.getElementById('rd03-view-details');
+  const dimensionBackBtn = document.getElementById('dimension-back-btn');
+  const dimensionViewEvidence = document.getElementById('dimension-view-evidence');
+
+  const detailDimensionId = document.getElementById('detail-dimension-id');
+  const detailDimensionName = document.getElementById('detail-dimension-name');
+  const detailStatus = document.getElementById('detail-status');
+  const detailStatusCopy = document.getElementById('detail-status-copy');
+  const detailGateImpact = document.getElementById('detail-gate-impact');
+  const detailFindingCondition = document.getElementById('detail-finding-condition');
+  const detailFindingTitle = document.getElementById('detail-finding-title');
+  const detailFindingSummary = document.getElementById('detail-finding-summary');
+  const detailFindingType = document.getElementById('detail-finding-type');
+  const detailCriticalTag = document.getElementById('detail-critical-tag');
+  const detailEvidenceTag = document.getElementById('detail-evidence-tag');
+  const detailFindingImpact = document.getElementById('detail-finding-impact');
+  const detailNextActionTitle = document.getElementById('detail-next-action-title');
+  const detailNextActionType = document.getElementById('detail-next-action-type');
+
+  const conditionalDimensionDetailData = {
+    rd01: {
+      id: 'RD-01',
+      name: 'Data & Access Readiness',
+      status: 'Unknown',
+      statusClass: 'status-chip status-unknown',
+      statusCopy: 'Dataset access cannot be confirmed with the evidence currently available.',
+      gateImpact: 'Prevents full PROCEED until the access condition is resolved.',
+      condition: 'Condition · Dataset access',
+      findingTitle: 'Dataset access permission is not confirmed',
+      findingSummary: 'Available sources do not establish whether the required dataset can be accessed under the user’s actual reproduction conditions.',
+      findingType: 'Finding type · Unknown',
+      gateCritical: true,
+      evidence: 'Evidence · Available',
+      findingImpact: 'Gate impact · Prevents full PROCEED',
+      nextAction: 'Confirm whether dataset access can be obtained',
+      nextActionType: 'Resolve Gate-critical Unknown'
+    },
+    rd02: {
+      id: 'RD-02',
+      name: 'Environment & Dependency Readiness',
+      status: 'Warning',
+      statusClass: 'status-chip status-warning',
+      statusCopy: 'The environment is usable for assessment, but one compatibility risk still needs validation.',
+      gateImpact: 'Adds a non-blocking risk to the current CONDITIONAL PROCEED decision.',
+      condition: 'Condition · Environment compatibility',
+      findingTitle: 'A version compatibility risk still needs validation',
+      findingSummary: 'The available environment facts differ from the project’s documented setup in a way that may matter, but current evidence does not establish a hard incompatibility.',
+      findingType: 'Finding type · Inference',
+      gateCritical: false,
+      evidence: 'Evidence · Available',
+      findingImpact: 'Gate impact · Non-blocking Warning',
+      nextAction: 'Validate the environment against the documented dependency setup',
+      nextActionType: 'Mitigate Warning'
+    },
+    rd03: {
+      id: 'RD-03',
+      name: 'Weights & Configuration Readiness',
+      status: 'Ready',
+      statusClass: 'status-chip status-ready',
+      statusCopy: 'Required checkpoint and configuration relationships are sufficiently identified for the current assessment.',
+      gateImpact: 'No current blocker from weights or configuration.',
+      condition: 'Condition · Checkpoint and configuration mapping',
+      findingTitle: 'Checkpoint and configuration relationships are sufficiently identified',
+      findingSummary: 'The available project materials provide a usable mapping between the required checkpoint and the configuration needed for the current reproduction path.',
+      findingType: 'Finding type · Fact',
+      gateCritical: false,
+      evidence: 'Evidence · Available',
+      findingImpact: 'Gate impact · No current blocker',
+      nextAction: 'Run a minimum configuration validation before higher-cost reproduction work',
+      nextActionType: 'Minimum Validation'
+    }
+  };
+
+  const pauseDimensionDetailData = {
+    rd01: {
+      id: 'RD-01',
+      name: 'Data & Access Readiness',
+      status: 'Blocked',
+      statusClass: 'status-chip status-blocked',
+      statusCopy: 'Explicit negative evidence shows the required dataset access is unavailable for the current reproduction path.',
+      gateImpact: 'This blocking condition triggers the current PAUSE decision.',
+      condition: 'Condition · Required dataset access',
+      findingTitle: 'Required dataset access is explicitly unavailable',
+      findingSummary: 'The current reproduction path has a confirmed negative access result for a required dataset condition.',
+      findingType: 'Finding type · Fact',
+      gateCritical: true,
+      evidence: 'Evidence · Available',
+      findingImpact: 'Gate impact · Triggers PAUSE',
+      nextAction: 'Resolve or replace the blocked access path',
+      nextActionType: 'Resolve Blocker'
+    },
+    rd02: conditionalDimensionDetailData.rd02,
+    rd03: conditionalDimensionDetailData.rd03
+  };
+
+  const proceedDimensionDetailData = {
+    rd01: {
+      id: 'RD-01',
+      name: 'Data & Access Readiness',
+      status: 'Ready',
+      statusClass: 'status-chip status-ready',
+      statusCopy: 'Required data and access conditions are sufficiently supported for the current validation path.',
+      gateImpact: 'No current blocker from data or access readiness.',
+      condition: 'Condition · Data and access requirements',
+      findingTitle: 'Required data and access conditions are sufficiently supported',
+      findingSummary: 'Available project materials and current access facts are sufficient for the intended validation path.',
+      findingType: 'Finding type · Fact',
+      gateCritical: false,
+      evidence: 'Evidence · Available',
+      findingImpact: 'Gate impact · No current blocker',
+      nextAction: 'Run the minimum validation before higher-cost reproduction work',
+      nextActionType: 'Minimum Validation'
+    },
+    rd02: {
+      id: 'RD-02',
+      name: 'Environment & Dependency Readiness',
+      status: 'Ready',
+      statusClass: 'status-chip status-ready',
+      statusCopy: 'Available environment facts are sufficiently aligned with the documented dependency requirements for the current validation path.',
+      gateImpact: 'No current blocker from environment or dependency readiness.',
+      condition: 'Condition · Environment compatibility',
+      findingTitle: 'Environment facts sufficiently support the current validation path',
+      findingSummary: 'The available environment facts are sufficiently aligned with the documented dependency requirements for the intended validation step.',
+      findingType: 'Finding type · Fact',
+      gateCritical: false,
+      evidence: 'Evidence · Available',
+      findingImpact: 'Gate impact · No current blocker',
+      nextAction: 'Run the minimum validation before higher-cost reproduction work',
+      nextActionType: 'Minimum Validation'
+    },
+    rd03: {
+      id: 'RD-03',
+      name: 'Weights & Configuration Readiness',
+      status: 'Ready',
+      statusClass: 'status-chip status-ready',
+      statusCopy: 'Required checkpoint and configuration relationships are sufficiently identified for the intended validation path.',
+      gateImpact: 'No current blocker from weights or configuration.',
+      condition: 'Condition · Checkpoint and configuration mapping',
+      findingTitle: 'Checkpoint and configuration relationships are sufficiently identified',
+      findingSummary: 'Available project materials provide a usable checkpoint and configuration mapping for the intended validation path.',
+      findingType: 'Finding type · Fact',
+      gateCritical: false,
+      evidence: 'Evidence · Available',
+      findingImpact: 'Gate impact · No current blocker',
+      nextAction: 'Run the minimum validation before higher-cost reproduction work',
+      nextActionType: 'Minimum Validation'
+    }
+  };
+
+  const dimensionDetailDataByScenario = {
+    conditional: conditionalDimensionDetailData,
+    pause: pauseDimensionDetailData,
+    proceed: proceedDimensionDetailData
+  };
+
+  let activeDimension = 'rd01';
+  let activeScenario = 'conditional';
+
+  function openDimensionDetail(key, scenario='conditional'){
+    activeDimension = key;
+    activeScenario = scenario;
+    const d = dimensionDetailDataByScenario[scenario][key];
+
+    detailDimensionId.textContent = d.id;
+    detailDimensionName.textContent = d.name;
+    detailStatus.className = d.statusClass;
+    detailStatus.textContent = d.status;
+    detailStatusCopy.textContent = d.statusCopy;
+    detailGateImpact.textContent = d.gateImpact;
+
+    detailFindingCondition.textContent = d.condition;
+    detailFindingTitle.textContent = d.findingTitle;
+    detailFindingSummary.textContent = d.findingSummary;
+    detailFindingType.textContent = d.findingType;
+    detailEvidenceTag.textContent = d.evidence;
+    detailFindingImpact.textContent = d.findingImpact;
+    detailNextActionTitle.textContent = d.nextAction;
+    detailNextActionType.textContent = d.nextActionType;
+    detailCriticalTag.style.display = d.gateCritical ? 'inline-flex' : 'none';
+
+    showScreen('dimensionDetail');
+  }
+
+  rd01ViewDetails.addEventListener('click', () => openDimensionDetail('rd01', 'conditional'));
+  rd02ViewDetails.addEventListener('click', () => openDimensionDetail('rd02', 'conditional'));
+  rd03ViewDetails.addEventListener('click', () => openDimensionDetail('rd03', 'conditional'));
+
+  const pauseRd01ViewDetails = document.getElementById('pause-rd01-view-details');
+  const pauseRd02ViewDetails = document.getElementById('pause-rd02-view-details');
+  const pauseRd03ViewDetails = document.getElementById('pause-rd03-view-details');
+  const proceedRd01ViewDetails = document.getElementById('proceed-rd01-view-details');
+  const proceedRd02ViewDetails = document.getElementById('proceed-rd02-view-details');
+  const proceedRd03ViewDetails = document.getElementById('proceed-rd03-view-details');
+
+  pauseRd01ViewDetails.addEventListener('click', () => openDimensionDetail('rd01', 'pause'));
+  pauseRd02ViewDetails.addEventListener('click', () => openDimensionDetail('rd02', 'pause'));
+  pauseRd03ViewDetails.addEventListener('click', () => openDimensionDetail('rd03', 'pause'));
+
+  proceedRd01ViewDetails.addEventListener('click', () => openDimensionDetail('rd01', 'proceed'));
+  proceedRd02ViewDetails.addEventListener('click', () => openDimensionDetail('rd02', 'proceed'));
+  proceedRd03ViewDetails.addEventListener('click', () => openDimensionDetail('rd03', 'proceed'));
+
+  dimensionBackBtn.addEventListener('click', () => {
+    if(activeScenario === 'pause') showScreen('pause');
+    else if(activeScenario === 'proceed') showScreen('proceed');
+    else showScreen('overview');
+  });
+
+  const evidenceDrawer = document.getElementById('evidence-drawer');
+  const evidenceBackdrop = document.getElementById('evidence-backdrop');
+  const evidenceClose = document.getElementById('evidence-close');
+  const evidenceTitle = document.getElementById('evidence-title');
+  const evidenceVerification = document.getElementById('evidence-verification');
+  const evidenceSummary = document.getElementById('evidence-summary');
+  const evidenceSource = document.getElementById('evidence-source');
+  const evidenceLocation = document.getElementById('evidence-location');
+  const evidenceMaterialType = document.getElementById('evidence-material-type');
+  const evidenceConflict = document.getElementById('evidence-conflict');
+  const evidenceOpenSource = document.getElementById('evidence-open-source');
+
+  const evidenceFeedbackBtn = document.getElementById('evidence-feedback-btn');
+
+  let currentEvidenceSourceUrl = '';
+
+  const conditionalEvidenceData = {
+    rd01: {
+      title: 'Dataset access evidence',
+      verification: 'Located Only',
+      verificationClass: 'verification-chip',
+      summary: 'Project materials identify the dataset dependency, but they do not establish whether the current user has permission or access under the intended reproduction conditions.',
+      source: 'Project documentation + user access context',
+      location: 'Dataset / setup references and current user-provided access facts',
+      materialType: 'Repository / User Context',
+      conflict: '',
+      sourceUrl: 'https://github.com/aseuteurideu/FGI'
+    },
+    rd02: {
+      title: 'Environment compatibility evidence',
+      verification: 'Corroborated',
+      verificationClass: 'verification-chip corroborated',
+      summary: 'The documented environment setup and the user-provided environment facts can be compared, revealing a compatibility risk that has not yet been shown to be blocking.',
+      source: 'Repository environment documentation + current environment facts',
+      location: 'Dependency/setup documentation and environment fields',
+      materialType: 'Repository / User Context',
+      conflict: 'The available sources support a version difference, but they do not establish that the difference is incompatible. Preserve this as a Warning rather than silently escalating it to Blocked.',
+      sourceUrl: 'https://github.com/aseuteurideu/FGI'
+    },
+    rd03: {
+      title: 'Checkpoint and configuration evidence',
+      verification: 'Corroborated',
+      verificationClass: 'verification-chip corroborated',
+      summary: 'Project materials provide enough information to identify the checkpoint and its configuration relationship for the current assessment path.',
+      source: 'Repository checkpoint / configuration references',
+      location: 'Model weight and configuration documentation',
+      materialType: 'Repository',
+      conflict: '',
+      sourceUrl: 'https://github.com/aseuteurideu/FGI'
+    }
+  };
+
+  const pauseEvidenceData = {
+    rd01: {
+      title: 'Blocking data-access evidence',
+      verification: 'Corroborated',
+      verificationClass: 'verification-chip corroborated',
+      summary: 'A required dataset access condition has an explicit negative result for the current reproduction path.',
+      source: 'Dataset requirement + current access result',
+      location: 'Required dataset access condition and current user access context',
+      materialType: 'Repository / User Context',
+      conflict: '',
+      sourceUrl: ''
+    },
+    rd02: conditionalEvidenceData.rd02,
+    rd03: conditionalEvidenceData.rd03
+  };
+
+  const proceedEvidenceData = {
+    rd01: {
+      title: 'Positive data and access evidence',
+      verification: 'Corroborated',
+      verificationClass: 'verification-chip corroborated',
+      summary: 'Available materials and current access facts are sufficient to support the data and access requirements for the current validation path.',
+      source: 'Project materials + user access context',
+      location: 'Dataset/access references and current reproduction context',
+      materialType: 'Repository / User Context',
+      conflict: '',
+      sourceUrl: ''
+    },
+    rd02: {
+      title: 'Positive environment evidence',
+      verification: 'Corroborated',
+      verificationClass: 'verification-chip corroborated',
+      summary: 'The current environment facts are sufficiently aligned with the documented dependency requirements for the current validation path.',
+      source: 'Environment facts + project setup documentation',
+      location: 'Dependency/setup documentation and environment fields',
+      materialType: 'Repository / User Context',
+      conflict: '',
+      sourceUrl: ''
+    },
+    rd03: {
+      title: 'Positive checkpoint and configuration evidence',
+      verification: 'Corroborated',
+      verificationClass: 'verification-chip corroborated',
+      summary: 'Required checkpoint and configuration relationships are sufficiently identified for the intended validation path.',
+      source: 'Project checkpoint / configuration references',
+      location: 'Weights and configuration documentation',
+      materialType: 'Repository',
+      conflict: '',
+      sourceUrl: ''
+    }
+  };
+
+  const evidenceDataByScenario = {
+    conditional: conditionalEvidenceData,
+    pause: pauseEvidenceData,
+    proceed: proceedEvidenceData
+  };
+
+  const evidenceConflictCompare = document.getElementById('evidence-conflict-compare');
+  const evidenceConflictATitle = document.getElementById('evidence-conflict-a-title');
+  const evidenceConflictACopy = document.getElementById('evidence-conflict-a-copy');
+  const evidenceConflictBTitle = document.getElementById('evidence-conflict-b-title');
+  const evidenceConflictBCopy = document.getElementById('evidence-conflict-b-copy');
+
+  function setEvidenceSourceUrl(url){
+    currentEvidenceSourceUrl = url || '';
+    evidenceOpenSource.style.display = currentEvidenceSourceUrl ? '' : 'none';
+  }
+
+  function resetConflictComparison(){
+    evidenceConflictCompare.classList.remove('active');
+    evidenceConflictATitle.textContent = '';
+    evidenceConflictACopy.textContent = '';
+    evidenceConflictBTitle.textContent = '';
+    evidenceConflictBCopy.textContent = '';
+  }
+
+  function openEvidenceDrawer(){
+    const ev = evidenceDataByScenario[activeScenario][activeDimension];
+
+    evidenceTitle.textContent = ev.title;
+    evidenceVerification.className = ev.verificationClass;
+    evidenceVerification.textContent = ev.verification;
+    evidenceSummary.textContent = ev.summary;
+    evidenceSource.textContent = ev.source;
+    evidenceLocation.textContent = ev.location;
+    evidenceMaterialType.textContent = ev.materialType;
+    setEvidenceSourceUrl(ev.sourceUrl);
+    resetConflictComparison();
+
+    if(ev.conflict){
+      evidenceConflict.textContent = ev.conflict;
+      evidenceConflict.classList.add('active');
+    }else{
+      evidenceConflict.textContent = '';
+      evidenceConflict.classList.remove('active');
+    }
+
+    evidenceDrawer.classList.add('active');
+    evidenceBackdrop.classList.add('active');
+    evidenceDrawer.setAttribute('aria-hidden','false');
+  }
+
+  function openResourceEvidenceDrawer(){
+    evidenceTitle.textContent = 'Resource constraint evidence';
+    evidenceVerification.className = 'verification-chip';
+    evidenceVerification.textContent = 'Located Only';
+    evidenceSummary.textContent = 'Current resource facts are available, while explicit minimum project requirements are not sufficiently established for a reliable shortfall comparison.';
+    evidenceSource.textContent = 'Current resource facts + project requirement sources';
+    evidenceLocation.textContent = 'User Context / repository setup and requirement references';
+    evidenceMaterialType.textContent = 'User Context / Repository';
+    evidenceConflict.textContent = '';
+    evidenceConflict.classList.remove('active');
+    resetConflictComparison();
+    setEvidenceSourceUrl('');
+
+    evidenceDrawer.classList.add('active');
+    evidenceBackdrop.classList.add('active');
+    evidenceDrawer.setAttribute('aria-hidden','false');
+  }
+
+  function openConflictEvidenceDrawer(){
+    evidenceTitle.textContent = 'Conflicting setup evidence';
+    evidenceVerification.className = 'verification-chip';
+    evidenceVerification.textContent = 'Located Only';
+    evidenceSummary.textContent = 'Two located sources support different interpretations of the same setup condition. The conflict is preserved for review rather than silently resolved.';
+    evidenceSource.textContent = 'Multiple conflicting sources';
+    evidenceLocation.textContent = 'Published setup description / repository setup documentation';
+    evidenceMaterialType.textContent = 'Paper / Repository';
+    evidenceConflict.textContent = 'The sources disagree. ResearchOps has not selected either source as authoritative.';
+    evidenceConflict.classList.add('active');
+
+    evidenceConflictATitle.textContent = 'Paper setup description';
+    evidenceConflictACopy.textContent = 'The published setup describes one environment or evaluation configuration.';
+    evidenceConflictBTitle.textContent = 'Repository setup description';
+    evidenceConflictBCopy.textContent = 'The repository material indicates a different environment or evaluation configuration.';
+    evidenceConflictCompare.classList.add('active');
+
+    setEvidenceSourceUrl('');
+    evidenceDrawer.classList.add('active');
+    evidenceBackdrop.classList.add('active');
+    evidenceDrawer.setAttribute('aria-hidden','false');
+  }
+
+  function closeEvidenceDrawer(){
+    evidenceDrawer.classList.remove('active');
+    evidenceBackdrop.classList.remove('active');
+    evidenceDrawer.setAttribute('aria-hidden','true');
+  }
+
+  dimensionViewEvidence.addEventListener('click', openEvidenceDrawer);
+  evidenceClose.addEventListener('click', closeEvidenceDrawer);
+  evidenceBackdrop.addEventListener('click', closeEvidenceDrawer);
+
+  evidenceOpenSource.addEventListener('click', () => {
+    if(currentEvidenceSourceUrl){
+      window.open(currentEvidenceSourceUrl, '_blank', 'noopener,noreferrer');
+    }
+  });
+
+  evidenceFeedbackBtn.addEventListener('click', () => {
+    openFeedbackPanel('evidence');
+  });
+
+  const modeDetails = {
+    readonly: document.getElementById('detail-readonly'),
+    snapshot: document.getElementById('detail-snapshot'),
+    manual: document.getElementById('detail-manual'),
+    later: null
+  };
+
+  function showModeDetail(mode){
+    Object.values(modeDetails).filter(Boolean).forEach(el => el.classList.remove('active'));
+    if (modeDetails[mode]) modeDetails[mode].classList.add('active');
+  }
+
+  targetTypeEl.addEventListener('change', () => {
+    targetResolved = false;
+    targetDeferred = false;
+    targetResolvedName = '';
+    targetResolvedTypeLabel = '';
+    clearSetupError();
+  });
+
+  targetEntryEl.addEventListener('input', () => {
+    targetResolved = false;
+    targetDeferred = false;
+    targetResolvedName = '';
+    targetResolvedTypeLabel = '';
+    clearSetupError();
+  });
+
+  modes.forEach(mode => {
+    mode.addEventListener('click', () => {
+      selectedMode = mode.dataset.mode;
+      modes.forEach(m => m.classList.remove('active'));
+      mode.classList.add('active');
+      showModeDetail(selectedMode);
+      continueBtn.innerHTML = selectedMode === 'readonly'
+        ? 'Continue to authorization <span>→</span>'
+        : 'Start readiness assessment <span>→</span>';
+    });
+  });
+
+  const candidateA = document.getElementById('candidate-a');
+  const candidateB = document.getElementById('candidate-b');
+  const targetConfirmBtn = document.getElementById('target-confirm-btn');
+  const targetSupplementBtn = document.getElementById('target-supplement');
+  const targetDeferBtn = document.getElementById('target-defer');
+
+  function selectCandidate(candidate){
+    [candidateA, candidateB].forEach(btn => btn.classList.remove('active'));
+    candidate.classList.add('active');
+    selectedTargetCandidate = candidate === candidateA ? 'a' : 'b';
+  }
+
+  candidateA.addEventListener('click', () => selectCandidate(candidateA));
+  candidateB.addEventListener('click', () => selectCandidate(candidateB));
+
+  targetConfirmBtn.addEventListener('click', () => {
+    targetResolved = true;
+    targetDeferred = false;
+    const selectedCandidate = selectedTargetCandidate === 'b' ? candidateB : candidateA;
+    targetResolvedName = selectedCandidate.querySelector('.candidate-name').textContent;
+    targetResolvedTypeLabel = selectedTargetCandidate === 'b' ? 'Related project / repository' : 'Paper';
+    prepareTargetIdentified();
+  });
+
+  targetSupplementBtn.addEventListener('click', () => {
+    showScreen('setup');
+    setTimeout(() => {
+      targetEntryEl.focus();
+      targetEntryEl.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 100);
+  });
+
+  const skipConfirmBackdrop = document.getElementById('skip-confirm-backdrop');
+  const skipConfirmCancel = document.getElementById('skip-confirm-cancel');
+  const skipConfirmProceed = document.getElementById('skip-confirm-proceed');
+
+  function openSkipConfirmation(){
+    skipConfirmBackdrop.classList.add('active');
+    skipConfirmBackdrop.setAttribute('aria-hidden','false');
+  }
+
+  function closeSkipConfirmation(){
+    skipConfirmBackdrop.classList.remove('active');
+    skipConfirmBackdrop.setAttribute('aria-hidden','true');
+  }
+
+  targetDeferBtn.addEventListener('click', openSkipConfirmation);
+
+  skipConfirmCancel.addEventListener('click', closeSkipConfirmation);
+
+  skipConfirmBackdrop.addEventListener('click', (e) => {
+    if(e.target === skipConfirmBackdrop) closeSkipConfirmation();
+  });
+
+  skipConfirmProceed.addEventListener('click', () => {
+    targetDeferred = true;
+    targetResolved = false;
+    closeSkipConfirmation();
+    continueAfterTargetResolution();
+  });
+
+  function selectEnvironmentMode(modeName){
+    selectedMode = modeName;
+    modes.forEach(m => {
+      const isActive = m.dataset.mode === modeName;
+      m.classList.toggle('active', isActive);
+    });
+    showModeDetail(modeName);
+    continueBtn.innerHTML = modeName === 'readonly'
+      ? 'Continue to authorization <span>→</span>'
+      : 'Start readiness assessment <span>→</span>';
+  }
+
+  const authUseSnapshot = document.getElementById('auth-use-snapshot');
+  const authUseManual = document.getElementById('auth-use-manual');
+  const authNoEnvironment = document.getElementById('auth-no-environment');
+
+  authUseSnapshot.addEventListener('click', () => {
+    showScreen('setup');
+    selectEnvironmentMode('snapshot');
+    setTimeout(() => {
+      const panel = document.getElementById('detail-snapshot');
+      if (panel) panel.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 120);
+  });
+
+  authUseManual.addEventListener('click', () => {
+    showScreen('setup');
+    selectEnvironmentMode('manual');
+    setTimeout(() => {
+      const panel = document.getElementById('detail-manual');
+      if (panel) panel.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 120);
+  });
+
+  authNoEnvironment.addEventListener('click', () => {
+    selectedMode = 'later';
+    startAssessmentProcessing();
+  });
+
+  const authorizeBtn = document.getElementById('authorize-btn');
+  const denyAuthorizeBtn = document.getElementById('deny-authorize-btn');
+  const authDeniedReview = document.getElementById('auth-denied-review');
+  const authDeniedSnapshot = document.getElementById('auth-denied-snapshot');
+  const authDeniedManual = document.getElementById('auth-denied-manual');
+  const authDeniedNoEnv = document.getElementById('auth-denied-no-env');
+
+  authorizeBtn.addEventListener('click', () => {
+    selectedMode = 'readonly';
+    startAssessmentProcessing();
+  });
+
+  denyAuthorizeBtn.addEventListener('click', () => {
+    showScreen('authDenied');
+  });
+
+  authDeniedReview.addEventListener('click', () => {
+    showScreen('auth');
+  });
+
+  authDeniedSnapshot.addEventListener('click', () => {
+    showScreen('setup');
+    selectEnvironmentMode('snapshot');
+    setTimeout(() => {
+      const panel = document.getElementById('detail-snapshot');
+      if(panel) panel.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 120);
+  });
+
+  authDeniedManual.addEventListener('click', () => {
+    showScreen('setup');
+    selectEnvironmentMode('manual');
+    setTimeout(() => {
+      const panel = document.getElementById('detail-manual');
+      if(panel) panel.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 120);
+  });
+
+  authDeniedNoEnv.addEventListener('click', () => {
+    selectedMode = 'later';
+    startAssessmentProcessing();
+  });
+
+  const snapshotInput = document.getElementById('snapshot-file');
+  const snapshotState = document.getElementById('snapshot-state');
+  const snapshotName = document.getElementById('snapshot-name');
+  const removeSnapshot = document.getElementById('remove-snapshot');
+
+  snapshotInput.addEventListener('change', () => {
+    if(snapshotInput.files && snapshotInput.files[0]){
+      snapshotName.textContent = snapshotInput.files[0].name;
+      snapshotState.classList.add('active');
+    }
+  });
+
+  removeSnapshot.addEventListener('click', (e) => {
+    e.preventDefault();
+    snapshotInput.value = '';
+    snapshotState.classList.remove('active');
+  });
+
+  continueBtn.addEventListener('click', () => {
+    clearSetupError();
+
+    if(!targetEntryEl.value.trim()){
+      showSetupError('Add a target entry before starting the assessment.');
+      return;
+    }
+
+    if(selectedMode === 'snapshot' && !(snapshotInput.files && snapshotInput.files[0])){
+      showSetupError('Upload an environment snapshot, choose another environment input mode, or select Not now.');
+      return;
+    }
+
+    const manualInput = document.querySelector('.manual-textarea');
+    if(selectedMode === 'manual' && !manualInput.value.trim()){
+      showSetupError('Add the environment facts you know, choose another input mode, or select Not now.');
+      return;
+    }
+
+    if(targetNeedsConfirmation()){
+      prepareTargetConfirmation();
+      return;
+    }
+
+    if(targetDeferred){
+      continueAfterTargetResolution();
+      return;
+    }
+
+    targetResolved = true;
+    targetResolvedName = getTargetDisplayName();
+    targetResolvedTypeLabel = targetTypeEl.options[targetTypeEl.selectedIndex].textContent;
+    prepareTargetIdentified();
+  });
+
+  backBtn.addEventListener('click', () => showScreen('setup'));
+
+  if(location.hash === '#target-identified'){
+    targetResolved = true;
+    prepareTargetIdentified();
+  }else if(location.hash === '#authorization-denied'){
+    showScreen('authDenied');
+  }else if(location.hash === '#partial-result'){
+    showScreen('partialResult');
+  }else if(location.hash === '#acquisition-failure'){
+    showScreen('acquisitionFailure');
+  }else if(location.hash === '#conflict'){
+    showScreen('conflict');
+  }else if(location.hash === '#gate-not-available'){
+    showScreen('gateNotAvailable');
+  }else if(location.hash === '#pause'){
+    showScreen('pause');
+  }else if(location.hash === '#proceed'){
+    showScreen('proceed');
+  }
+</script>
+</body>
+</html>
